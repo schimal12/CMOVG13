@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CMOVG13</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="welcome_back">Sign in</string>
+</resources>
