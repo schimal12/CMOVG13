@@ -84,7 +84,7 @@
             android:textSize="20sp">
         </Button>
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -98,13 +98,13 @@
                 android:textSize="16sp"
                 android:layout_gravity="center"
                 android:gravity="center" ></TextView>
-            <TextView
+            <Button
                 android:id="@+id/signinButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="signin"
-            android:textSize="16sp"
-            android:layout_marginLeft="5dp"></TextView>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="sign in"
+                android:textSize="16sp"
+                android:layout_marginLeft="5dp"></Button>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
