@@ -11,20 +11,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button SignIn = (Button)findViewById(R.id.signInBtn);
+
+        Button SignIn = (Button) findViewById(R.id.signInBtn);
+        SignIn.setOnClickListener(this);
+        Button SignUp = (Button) findViewById(R.id.signUpBtn);
+        SignUp.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
         EditText username = (EditText) findViewById(R.id.signinUsername);
         EditText password = (EditText) findViewById(R.id.signinPassword);
 
-        SignIn.setOnClickListener(new View.OnClickListener()  {
-
-            @Override
-            public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.signInBtn:
                 if(username.getText().toString().isEmpty() || password.getText().toString().isEmpty()){
                     Context context = getApplicationContext();
                     CharSequence text = "You need to enter a username and password";
@@ -37,7 +43,11 @@ public class LoginActivity extends AppCompatActivity {
                     toChatRoom.putExtra("username", username.getText().toString());
                     startActivity(toChatRoom);
                 }
-            }
-        });
+                break;
+            case R.id.signUpBtn:
+                Intent toRegisterActivity = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(toRegisterActivity);
+                break;
+        }
     }
 }
