@@ -29,12 +29,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="20dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/username"
             android:layout_marginTop="15dp"
-            android:textSize="15sp"></TextView>
+            android:textSize="15sp" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,5 +94,4 @@
                 android:layout_marginLeft="5dp"></TextView>
         </LinearLayout>
     </LinearLayout>
-
 </ScrollView>
