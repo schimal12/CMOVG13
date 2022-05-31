@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import pt.ulisboa.tecnico.cmov.cmovg13.model.Message;
 
-
 public class ChatRoom extends AppCompatActivity {
 
     private Socket socket;
@@ -54,13 +53,13 @@ public class ChatRoom extends AppCompatActivity {
 
         try {
             //Connecting to the NodeJS server
-            socket = IO.socket("http://192.168.1.76:3001/"); // Need to check if the connection works or not.
-            socket.connect();
-            socket.emit("connection",username);
+            socket = IO.socket("http://194.210.227.178:3001"); //
         } catch (URISyntaxException e) {
             Log.e("Error de conexion", String.valueOf(e));
         }
-
+        Log.d("Useranme", username);
+        socket.connect();
+        socket.emit("connection",username);
 
         //Implementing the listeners for socket.io
         //https://socket.io/docs/v4/listening-to-events/
