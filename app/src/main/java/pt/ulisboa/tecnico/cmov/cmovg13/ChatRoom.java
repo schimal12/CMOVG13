@@ -7,11 +7,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -37,6 +41,11 @@ public class ChatRoom extends AppCompatActivity {
     public EditText message;
     public Button sendMessage;
 
+    // attach a camera image
+    // define the button and imageview type variable
+    ImageButton camera_open_id;
+    ImageView click_image_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +58,29 @@ public class ChatRoom extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        // CAMERA
+        // by ID we can get each component which id is assigned in XML file
+        // get Buttons and ImageView
+        camera_open_id = (ImageButton) findViewById(R.id.camera);
+        click_image_id = (ImageView) findViewById(R.id.imageView);
+
+        // camera_open is for open the camera and add the setOnCLickListener in this button
+        camera_open_id.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivity(camera_intent);
+            }
+        });
+
+        // MAPS
+        // Set the layout content view
+        // setContentView(R.layout.activity_chat_room);
+
+        // Get a handle to the fragment and register the callback
+        //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        //mapFragment.getMapAsync(this);
 
         Intent fromUsername = getIntent();
         username = fromUsername.getExtras().getString("username"); // I am not sure of this part, I will check it later.
@@ -133,6 +165,25 @@ public class ChatRoom extends AppCompatActivity {
         });
 
     }
+
+    // save the image
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // BitMap is data structure of image file which store the image in memory
+        Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+        // Set the image in imageview for display
+        click_image_id.setImageBitmap(photo);
+    }
+
+    /*
+    // get a handle to the GoogleMap object and display marker
+    @Override
+    public void onMapReady(GoogleMap googleMap){
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(0,0)).title("Marker"));
+    }
+     */
 
     @Override
     protected void onDestroy() {
