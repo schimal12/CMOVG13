@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
 import pt.ulisboa.tecnico.cmov.cmovg13.model.Message;
 
 public class ChatRoom extends AppCompatActivity {
@@ -40,10 +42,10 @@ public class ChatRoom extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
 
-        message = (EditText)findViewById(R.id.message);
-        sendMessage = (Button)findViewById(R.id.sendMessage);
+        message = (EditText) findViewById(R.id.message);
+        sendMessage = (Button) findViewById(R.id.sendMessage);
         ListaMensajes = new ArrayList<>();
-        recyclerView = (RecyclerView)findViewById(R.id.ChatMessagesList);
+        recyclerView = (RecyclerView) findViewById(R.id.ChatMessagesList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -59,7 +61,7 @@ public class ChatRoom extends AppCompatActivity {
         }
         Log.d("Useranme", username);
         socket.connect();
-        socket.emit("connection",username);
+        socket.emit("connection", username);
 
         //Implementing the listeners for socket.io
         //https://socket.io/docs/v4/listening-to-events/
@@ -71,36 +73,36 @@ public class ChatRoom extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String newUser = (String)args[0];
+                        String newUser = (String) args[0];
                         //Showing who is joining to the chat room
-                        Toast.makeText(ChatRoom.this,newUser,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ChatRoom.this, newUser, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
 
         socket.on("message", new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void call(final Object... args) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                JSONObject data = (JSONObject) args[0];
-                                try {
-                                    String nickname = data.getString("sNickname");
-                                    String message = data.getString("message");
-                                    Message m = new Message(nickname, message);
-                                    ListaMensajes.add(m);
-                                    recycleViewAdapater = new RecycleViewAdapater(ListaMensajes);
-                                    recycleViewAdapater.notifyDataSetChanged();
-                                    recyclerView.setAdapter(recycleViewAdapater);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
+                    public void run() {
+                        JSONObject data = (JSONObject) args[0];
+                        try {
+                            String nickname = data.getString("sNickname");
+                            String message = data.getString("message");
+                            Message m = new Message(nickname, message);
+                            ListaMensajes.add(m);
+                            recycleViewAdapater = new RecycleViewAdapater(ListaMensajes);
+                            recycleViewAdapater.notifyDataSetChanged();
+                            recyclerView.setAdapter(recycleViewAdapater);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
+            }
+        });
         socket.on("userdisconnect", new Emitter.Listener() {
             @Override
             public void call(final Object... args) {
@@ -108,7 +110,7 @@ public class ChatRoom extends AppCompatActivity {
                     @Override
                     public void run() {
                         String data = (String) args[0];
-                        Toast.makeText(ChatRoom.this,data,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ChatRoom.this, data, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -117,13 +119,13 @@ public class ChatRoom extends AppCompatActivity {
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(message.getText().toString().isEmpty()){
+                if (message.getText().toString().isEmpty()) {
                     Context context = getApplicationContext();
                     CharSequence text = "Write something, :)";
                     int duration = Toast.LENGTH_SHORT;
                     Toast toastUserName = Toast.makeText(context, text, duration);
                     toastUserName.show();
-                }else{
+                } else {
                     socket.emit("messagedetection", username, message.getText());
                     message.setText("");
                 }
@@ -131,6 +133,7 @@ public class ChatRoom extends AppCompatActivity {
         });
 
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

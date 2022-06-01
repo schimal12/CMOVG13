@@ -48,6 +48,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Intent toRegisterActivity = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(toRegisterActivity);
                 break;
+            case R.id.chatsLinkButton:
+                Intent intent = new Intent(LoginActivity.this, ChatOverviewActivity.class);
+                startActivity(intent);
+                break;
+
         }
     }
 }

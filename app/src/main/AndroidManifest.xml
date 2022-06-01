@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="pt.ulisboa.tecnico.cmov.cmovg13">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,10 +14,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CMOVG13"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ChatOverviewActivity"
+            android:exported="false"
+            android:parentActivityName=".LoginActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" />
+        </activity>
+        <activity
             android:name=".ChatRoom"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ChatOverviewActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ChatOverviewActivity" /></activity>
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />

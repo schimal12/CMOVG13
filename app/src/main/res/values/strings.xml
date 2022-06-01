@@ -6,4 +6,5 @@
     <string name="username">Username</string>
     <string name="welcome_back">Sign in</string>
     <string name="SendButton">Send</string>
+    <string name="chats_overview_title">Chats</string>
 </resources>
