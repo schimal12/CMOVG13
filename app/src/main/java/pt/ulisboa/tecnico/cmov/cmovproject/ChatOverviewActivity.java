@@ -15,7 +15,10 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -25,6 +28,9 @@ public class ChatOverviewActivity extends AppCompatActivity {
     ListView chatsListView;
     public SocketIOApp app;
     public Socket mSocket;
+    public List<String> RoomArrayList;
+    public String username;
+    ArrayAdapter<String> chatsArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,8 @@ public class ChatOverviewActivity extends AppCompatActivity {
 
         chatsListView = findViewById(R.id.chats_list_view);
 
+        Intent fromUsername = getIntent();
+        username = fromUsername.getExtras().getString("username");
 
         app = SocketIOApp.getInstance();
         mSocket = app.getSocket();
@@ -48,25 +56,17 @@ public class ChatOverviewActivity extends AppCompatActivity {
 
         chatsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            String username = "dummy";
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(ChatOverviewActivity.this,
-                        chatsArray.get(position),
-                        Toast.LENGTH_SHORT).show();
 
-
-                //TODO: pass relevant chatroom info
-                Intent intent = new Intent(ChatOverviewActivity.this,
-                        ChatRoom.class);
-                intent.putExtra("username", username);
-
-                startActivity(intent);
-
+                String room = (String)chatsListView.getItemAtPosition(position);
+                Intent toChatRoom = new Intent(ChatOverviewActivity.this, ChatRoom.class);
+                toChatRoom.putExtra("chatroomname",room);
+                toChatRoom.putExtra("username", username);
+                startActivity(toChatRoom);
             }
         });
-    }
+  }
 
 
 
@@ -79,52 +79,20 @@ public Emitter.Listener ListenerRooms = new Emitter.Listener(){
             @Override
             public void run() {
                 String data = (String)args[0];
-                String dataTransformed = data.substring(1, data.length()-1);
-                String dataTransformedQuotes = dataTransformed.replace("\"","");
-                String[] RoomList = dataTransformedQuotes.split(",");
+                String[] RoomList  = data.substring(1, data.length()-1).replace("\"","").split(",");
                 for(int j=0; j<RoomList.length;j++){
                     Log.d("Rooms",RoomList[j]);
                 }
                 //Populate list of Rooms with the Server response.
-                ArrayList<String> chatsArray = new ArrayList<>();
-
-
-                ArrayAdapter<String> chatsArrayAdapter = new ArrayAdapter<>(this,
-                        android.R.layout.simple_list_item_1,
-                        chatsArray);
-
+                RoomArrayList = new ArrayList<String>(Arrays.asList(RoomList));
+                RoomArrayList.remove(0);
+                chatsArrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, RoomArrayList);
                 chatsListView.setAdapter(chatsArrayAdapter);
-
             }
         });
     }
 };
-    public Emitter.Listener ListenUserRoom = new Emitter.Listener(){
 
-        @Override
-        public void call(Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    String data = (String)args[0];
-                    Toast.makeText(ChatOverviewActivity.this, data, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    };
-
-    public Emitter.Listener ListerUserDisconnected = new Emitter.Listener(){
-        @Override
-        public void call(Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    String data = (String)args[0];
-                    Toast.makeText(ChatOverviewActivity.this, data, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    };
 
     public Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
@@ -147,6 +115,7 @@ public Emitter.Listener ListenerRooms = new Emitter.Listener(){
             });
         }
     };
+
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {

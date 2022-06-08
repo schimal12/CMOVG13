@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,7 @@ public class ChatRoom extends AppCompatActivity {
     public Button sendMessage;
     public SocketIOApp app;
     public Socket mSocket;
+    public TextView RoomName;
     ImageButton camera_open_id;
     ImageView click_image_id;
 
@@ -50,6 +52,7 @@ public class ChatRoom extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
 
+        RoomName = (TextView)findViewById(R.id.RoomID);
         message = (EditText) findViewById(R.id.message);
         sendMessage = (Button) findViewById(R.id.sendMessage);
         ListaMensajes = new ArrayList<>();
@@ -58,6 +61,11 @@ public class ChatRoom extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+
+        Intent fromUsername = getIntent();
+        username = fromUsername.getExtras().getString("username");
+        roomname = fromUsername.getExtras().getString("chatroomname");
+        RoomName.setText("Room: "+roomname);
 
         // CAMERA
         // by ID we can get each component which id is assigned in XML file
@@ -90,9 +98,7 @@ public class ChatRoom extends AppCompatActivity {
         mSocket.on("userjoinedroom", ListenUserRoom);
         mSocket.on("userDisconnected", ListerUserDisconnected);
 
-        Intent fromUsername = getIntent();
-        username = fromUsername.getExtras().getString("username");
-        roomname = fromUsername.getExtras().getString("chatroomname");
+
         //Modification of emit to join to a specific Room.
         mSocket.emit("join", username, roomname);
 
