@@ -25,6 +25,7 @@ class RecycleViewAdapater extends  RecyclerView.Adapter<RecycleViewAdapater.View
             super(view);
             username = (TextView) view.findViewById(R.id.nickname);
             message = (TextView) view.findViewById(R.id.message);
+
         }
     }
 
@@ -37,21 +38,19 @@ class RecycleViewAdapater extends  RecyclerView.Adapter<RecycleViewAdapater.View
         return ListaMensajes.size();
     }
 
-    @NonNull
+
+
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.message, parent, false);
+    public RecycleViewAdapater.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.message, parent, false);
         return new RecycleViewAdapater.ViewHolder(itemView);
     }
-
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        //Need to add date
         Message m = ListaMensajes.get(position);
         holder.username.setText(m.getUsername());
         holder.message.setText(m.getMessage());
-
     }
 }
 

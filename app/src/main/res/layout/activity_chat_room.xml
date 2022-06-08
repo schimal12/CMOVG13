@@ -2,17 +2,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
+
     <LinearLayout
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ChatMessagesList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ChatMessagesList"
-            android:scrollbars="vertical"
-            android:layout_weight="3" />
+            android:layout_weight="3"
+            android:scrollbars="vertical" />
 
         <View
             android:layout_width="match_parent"
@@ -22,8 +23,7 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        </ImageView>
+            android:layout_height="wrap_content"></ImageView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,26 +38,27 @@
                 android:background="@color/design_default_color_background"
                 android:icon="@drawable/ic_camera"
                 android:src="@drawable/ic_camera"
-                tools:src="@drawable/ic_camera"/>
+                tools:src="@drawable/ic_camera" />
 
-            <ImageButton android:layout_width="60dp"
+            <ImageButton
+                android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@color/design_default_color_background"
                 android:src="@drawable/ic_map"
-                tools:src="@drawable/ic_map"/>
+                tools:src="@drawable/ic_map" />
 
             <EditText
                 android:id="@+id/message"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
-                android:hint="Write"/>
+                android:hint="Write" />
 
             <Button
                 android:id="@+id/sendMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/SendButton"/>
+                android:text="@string/SendButton" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

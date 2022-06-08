@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -15,7 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CMOVProject"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ChatRoomPicker"
+            android:exported="false" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
@@ -34,7 +37,8 @@
             android:parentActivityName=".ChatOverviewActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ChatOverviewActivity" /></activity>
+                android:value=".ChatOverviewActivity" />
+        </activity>
         <activity
             android:name=".ChatOverviewActivity"
             android:exported="false"
@@ -44,4 +48,5 @@
                 android:value=".LoginActivity" />
         </activity>
     </application>
+
 </manifest>

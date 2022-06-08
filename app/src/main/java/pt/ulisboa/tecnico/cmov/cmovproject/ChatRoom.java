@@ -24,6 +24,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -32,6 +34,7 @@ public class ChatRoom extends AppCompatActivity {
 
     //private Socket socket;
     private String username;
+    private String roomname;
     public RecyclerView recyclerView;
     public List<Message> ListaMensajes;
     public RecycleViewAdapater recycleViewAdapater;
@@ -76,43 +79,33 @@ public class ChatRoom extends AppCompatActivity {
             }
         });
 
-        // MAPS
-        // Set the layout content view
-        // setContentView(R.layout.activity_chat_room);
 
-        // Get a handle to the fragment and register the callback
-        //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        //mapFragment.getMapAsync(this);
-
-
-        app = new SocketIOApp();
+        app = SocketIOApp.getInstance();
         mSocket = app.getSocket();
-        mSocket.connect();
         mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError1);
         mSocket.on(Socket.EVENT_CONNECT, onConnect);
         mSocket.on(Socket.EVENT_DISCONNECT, onDisconnect);
         mSocket.on("message", ListenMessages);
-        mSocket.on("connection", ListenConnection);
+        mSocket.on("userconnected", ListenConnection);
         mSocket.on("userjoinedroom", ListenUserRoom);
         mSocket.on("userDisconnected", ListerUserDisconnected);
 
         Intent fromUsername = getIntent();
-        username = fromUsername.getExtras().getString("username"); // I am not sure of this part, I will check it later.
-        mSocket.emit("join", username);
-
+        username = fromUsername.getExtras().getString("username");
+        roomname = fromUsername.getExtras().getString("chatroomname");
+        //Modification of emit to join to a specific Room.
+        mSocket.emit("join", username, roomname);
 
         //Send button.
 
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSocket.emit("messageemit", username, message.getText().toString());
-                message.setText("");
+                mSocket.emit("messageemit", username, message.getText().toString(), roomname);
+                message.setText(" ");
             }
         });
     }
-
-    //Camera functions.
 
 
     //Listeners
@@ -123,30 +116,45 @@ public class ChatRoom extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    String newUser = (String) args[0];
-                    //Showing who is joining to the chat room
-                    Toast.makeText(ChatRoom.this, newUser, Toast.LENGTH_SHORT).show();
+                    JSONObject data = (JSONObject)args[0];
+                    try{
+                        String uNickname = data.getString("message");
+                        String message = "The user "+uNickname+" has connected";
+                        Toast.makeText(ChatRoom.this, message, Toast.LENGTH_SHORT).show();
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }
                 }
             });
         }
     };
 
+
     public Emitter.Listener ListenMessages = new Emitter.Listener(){
 
         @Override
         public void call(Object... args) {
-            JSONObject data = (JSONObject)args[0];
-            try {
-                String uNickname = data.getString("uNickname");
-                String messageText = data.getString("message");
-                Message message = new Message(messageText, uNickname);
-                ListaMensajes.add(message);
-                recycleViewAdapater = new RecycleViewAdapater(ListaMensajes);
-                recycleViewAdapater.notifyDataSetChanged();
-                recyclerView.setAdapter(recycleViewAdapater);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject)args[0];
+                    try {
+                        String uNickname = data.getString("uNickname");
+                        String messageText = data.getString("message");
+                        Date date = Calendar.getInstance().getTime();
+                        Message message = new Message(messageText, uNickname, date);
+                        ListaMensajes.add(message);
+                        for(int i = 0; i<ListaMensajes.size();i++){
+                            Log.d("Messages", ListaMensajes.get(i).getUsername()+" "+ListaMensajes.get(i).getMessage());
+                        }
+                        recycleViewAdapater = new RecycleViewAdapater(ListaMensajes);
+                        recycleViewAdapater.notifyDataSetChanged();
+                        recyclerView.setAdapter(recycleViewAdapater);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     };
 
@@ -178,24 +186,9 @@ public class ChatRoom extends AppCompatActivity {
     };
 
     public Emitter.Listener onConnect = new Emitter.Listener() {
-        @Override
+        @Override   
         public void call(Object... args) {
             Log.d("Socket", "Socket Connected!");
-        }
-    };
-
-    private Emitter.Listener onConnectError = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    for(Object obj:args){
-                        Log.v("Socket Test", ""+obj);
-                    }
-                    Log.d("Socket", "Socket Error!");
-                }
-            });
         }
     };
 
@@ -226,11 +219,9 @@ public class ChatRoom extends AppCompatActivity {
         }
     };
 
-    @Override
+    /*@Override
     protected void onDestroy() {
         super.onDestroy();
         mSocket.disconnect();
-    }
+    }*/
 }
-
-//Ideas for images (Convert them to bytes and read them).
