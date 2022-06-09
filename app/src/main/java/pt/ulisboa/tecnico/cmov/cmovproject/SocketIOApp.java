@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.net.URISyntaxException;
-
 import io.socket.client.Socket;
 import io.socket.client.IO;
 

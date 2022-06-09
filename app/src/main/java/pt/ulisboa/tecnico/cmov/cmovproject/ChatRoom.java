@@ -153,7 +153,7 @@ public class ChatRoom extends AppCompatActivity {
                         for(int i = 0; i<ListaMensajes.size();i++){
                             Log.d("Messages", ListaMensajes.get(i).getUsername()+" "+ListaMensajes.get(i).getMessage());
                         }
-                        recycleViewAdapater = new RecycleViewAdapater(ListaMensajes);
+                        recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
                         recycleViewAdapater.notifyDataSetChanged();
                         recyclerView.setAdapter(recycleViewAdapater);
                     } catch (JSONException e) {
