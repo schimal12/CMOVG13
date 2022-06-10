@@ -70,6 +70,7 @@ public class ChatRoom extends AppCompatActivity {
 
     // google maps
     ImageButton maps_button;
+    ImageView image_ubi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,21 +105,13 @@ public class ChatRoom extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent maps_intent = new Intent(ChatRoom.this,MapsActivity.class);
+                maps_intent.putExtra("username",username);
                 startActivity(maps_intent);
             }
         });
 
         // to show the photo
         mPhotoImageView = findViewById(R.id.imageView);
-        //mPhotoImageView.setOnClickListener((View.OnClickListener) this);
-
-        // MAPS
-        // Set the layout content view
-        // setContentView(R.layout.activity_chat_room);
-
-        // Get a handle to the fragment and register the callback
-        //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        //mapFragment.getMapAsync(this);
 
         Intent fromUsername = getIntent();
         username = fromUsername.getExtras().getString("username"); // I am not sure of this part, I will check it later.
@@ -211,6 +204,7 @@ public class ChatRoom extends AppCompatActivity {
                 }
             }
         });
+        sendUbi();
 
     }
 
@@ -235,6 +229,12 @@ public class ChatRoom extends AppCompatActivity {
         startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
     }
 
+    private void sendUbi(){
+        Intent fromUbi = getIntent();
+        ImageView ubication = fromUbi.getExtras().getParcelable("actual_ubication");
+
+    }
+
 
     // save the image
     @Override
@@ -245,14 +245,6 @@ public class ChatRoom extends AppCompatActivity {
             mPhotoImageView.setImageBitmap(imgBitMap);
         }
     }
-
-    /*
-    // get a handle to the GoogleMap object and display marker
-    @Override
-    public void onMapReady(GoogleMap googleMap){
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(0,0)).title("Marker"));
-    }
-     */
 
     private File createImageFile() throws  IOException{
         String nombreImagen = "foto_";
@@ -273,4 +265,3 @@ public class ChatRoom extends AppCompatActivity {
 
 }
 
-//Ideas for images (Convert them to bytes and read them).

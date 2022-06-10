@@ -19,6 +19,13 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="153dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="260dp"
+            android:layout_weight="3" />
+
+        <ImageView
+            android:id="@+id/ubi"
+            android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginLeft="260dp"
 
