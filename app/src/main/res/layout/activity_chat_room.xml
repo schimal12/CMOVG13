@@ -23,13 +23,14 @@
             android:layout_marginLeft="260dp"
             android:layout_weight="3" />
 
-        <ImageView
+        <fragment
             android:id="@+id/ubi"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginLeft="260dp"
-
-            android:layout_weight="3" />
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="263dp"
+            android:layout_height="214dp"
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="10dp"
+            tools:context=".MapsActivity" />
 
         <View
             android:layout_width="match_parent"

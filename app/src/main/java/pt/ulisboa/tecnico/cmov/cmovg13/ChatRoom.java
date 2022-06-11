@@ -1,9 +1,12 @@
 package pt.ulisboa.tecnico.cmov.cmovg13;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +36,13 @@ import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +60,7 @@ import java.util.concurrent.Callable;
 
 import pt.ulisboa.tecnico.cmov.cmovg13.model.Message;
 
-public class ChatRoom extends AppCompatActivity {
+public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
 
     private Socket socket;
     private String username;
@@ -60,17 +70,20 @@ public class ChatRoom extends AppCompatActivity {
     public EditText message;
     public Button sendMessage;
 
-    // attach a camera image
-    // define the button and imageview type variable
-    ImageButton camera_open_id; // take the photo
-    // show the photo
-    private ImageView mPhotoImageView;
+    // --------- camera image ---------
+    ImageButton camera_open_id;
+    private ImageView mPhotoImageView;                // to show the photo
     private String photoURI;
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    // google maps
+    // --------- google maps ---------
     ImageButton maps_button;
-    ImageView image_ubi;
+    private GoogleMap mMap;
+    Boolean actual_ubi_check,input_ubi_check = false; // from MapsActivity
+    Double Actual_ubi_lat,Actual_ubi_long;            // from MapsActivity
+    Double Input_ubi_lat,Input_ubi_long;              // from MapsActivity
+    SupportMapFragment mapFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +98,8 @@ public class ChatRoom extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        // CAMERA
-        // by ID we can get each component which id is assigned in XML file
-        // get Buttons and ImageView
+        // --------- Camera ---------
         camera_open_id = (ImageButton) findViewById(R.id.camera);
-
-        // camera_open is for open the camera and add the setOnCLickListener in this button
         camera_open_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,8 +107,10 @@ public class ChatRoom extends AppCompatActivity {
                 startActivity(camera_intent);
             }
         });
+        // to show the photo on the chat
+        mPhotoImageView = findViewById(R.id.imageView);
 
-        // maps
+        // --------- Map Activity ---------
         maps_button = (ImageButton) findViewById(R.id.map);
         maps_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,11 +121,13 @@ public class ChatRoom extends AppCompatActivity {
             }
         });
 
-        // to show the photo
-        mPhotoImageView = findViewById(R.id.imageView);
+        // --------- Map Fragment no visible in the beginning ---------
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.ubi);
+        mapFragment.getMapAsync(this);
+        mapFragment.getView().setVisibility(View.GONE);
 
-        Intent fromUsername = getIntent();
-        username = fromUsername.getExtras().getString("username"); // I am not sure of this part, I will check it later.
+        receiveDataFromMapsActivity();
 
         try {
             //Connecting to the NodeJS server
@@ -198,43 +211,60 @@ public class ChatRoom extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    abrirCamara();
+                    openCamera();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
-        sendUbi();
-
     }
 
-    private void abrirCamara() throws  IOException{
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File imagenArchivo = null;
+    private void receiveDataFromMapsActivity(){
+        Intent fromData = getIntent();
+        username = fromData.getExtras().getString("username");
+        double actual_ubi_lat = fromData.getExtras().getDouble("actual_ubi_lat");
+        Actual_ubi_lat = actual_ubi_lat;
+        double actual_ubi_long = fromData.getExtras().getDouble("actual_ubi_long");
+        Actual_ubi_long = actual_ubi_long;
+        actual_ubi_check = fromData.getExtras().getBoolean("actual_ubi_check");
+        if (actual_ubi_check == true){
+            mapFragment.getView().setVisibility(View.VISIBLE);
+        }
+        double search_ubi_lat = fromData.getExtras().getDouble("search_ubi_lat");
+        Input_ubi_lat = search_ubi_lat;
+        double search_ubi_long = fromData.getExtras().getDouble("search_ubi_long");
+        Input_ubi_long = search_ubi_long;
+        input_ubi_check = fromData.getExtras().getBoolean("input_ubi_check");
+        if (input_ubi_check == true){
+            mapFragment.getView().setVisibility(View.VISIBLE);
+        }
+        double marker_ubi_lat = fromData.getExtras().getDouble("marker_ubi_lat");
+        double marker_ubi_long = fromData.getExtras().getDouble("marker_ubi_long");
+        Log.e("actual_ubi_lat: ", String.valueOf(actual_ubi_lat));
+        Log.e("actual_ubi_long: ", String.valueOf(actual_ubi_long));
+        Log.e("search_ubi_lat: ", String.valueOf(search_ubi_lat));
+        Log.e("search_ubi_long: ", String.valueOf(search_ubi_long));
+        Log.e("marker_ubi_lat: ", String.valueOf(marker_ubi_lat));
+        Log.e("marker_ubi_long: ", String.valueOf(marker_ubi_long));
+    }
 
+    private void openCamera() throws  IOException{
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File imgFile = null;
         try{
-            imagenArchivo = createImageFile();
+            imgFile = createImageFile();
 
         }catch (IOException ex){
             Log.e("Error", ex.toString());
         }
-
-
-        if(imagenArchivo != null)
+        if(imgFile != null)
         {
-            Uri fotoUri = FileProvider.getUriForFile(this, "com.example.myapplication.fileprovider", imagenArchivo);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, fotoUri);
+            Uri imgUri = FileProvider.getUriForFile(this, "com.example.myapplication.fileprovider", imgFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
         }
 
         startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
     }
-
-    private void sendUbi(){
-        Intent fromUbi = getIntent();
-        ImageView ubication = fromUbi.getExtras().getParcelable("actual_ubication");
-
-    }
-
 
     // save the image
     @Override
@@ -247,13 +277,13 @@ public class ChatRoom extends AppCompatActivity {
     }
 
     private File createImageFile() throws  IOException{
-        String nombreImagen = "foto_";
-        File directorio = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File imagen = File.createTempFile(nombreImagen, ".jpg", directorio);
+        String name = "foto_";
+        File folder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(name, ".jpg", folder);
 
-        photoURI = imagen.getAbsolutePath();
+        photoURI = image.getAbsolutePath();
         Log.d("PHOTOURI:",photoURI);
-        return imagen;
+        return image;
     }
 
     @Override
@@ -262,6 +292,33 @@ public class ChatRoom extends AppCompatActivity {
         socket.disconnect();
     }
 
-
+    // fragment of the map on the chat
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+        LatLng location = new LatLng(0,0);
+        if (actual_ubi_check == true){
+            LatLng actual = new LatLng(Actual_ubi_lat,Actual_ubi_long);
+            location = actual;
+            mMap.addMarker(new MarkerOptions()
+                    .position(actual)
+                    .title("Current location"));
+        }
+        else if (input_ubi_check == true){
+            LatLng input = new LatLng(Input_ubi_lat,Input_ubi_long);
+            location = input;
+            mMap.addMarker(new MarkerOptions()
+                    .position(input)
+                    .title("Search location"));
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(location)
+                .zoom(15)
+                .bearing(90)
+                .tilt(45)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
 }
 
