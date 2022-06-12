@@ -73,7 +73,7 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
     public Button sendMessage;
     public SocketIOApp app;
     public Socket mSocket;
-    public TexytView RoomName;
+    public TextView RoomName;
 
     // --------- camera image ---------
     ImageButton camera_open_id;
