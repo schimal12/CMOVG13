@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.cmovproject;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -9,7 +10,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -26,17 +29,27 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+import pt.ulisboa.tecnico.cmov.cmovg13.R;
 
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+
+    String username;
     private GoogleMap mMap;
     ImageView imageViewSearch;
     EditText inputLocation;
+
+    Button actual_ubi,specific_ubi,marker_ubi;
+    // for ChatRoom
+    double actual_ubi_lat, actual_ubi_long;
+    double search_ubi_lat, search_ubi_long;
+    Boolean actual_ubi_check,input_ubi_check=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +58,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         imageViewSearch = findViewById(R.id.imageViewSearch);
         inputLocation = findViewById(R.id.inputLocation);
+        actual_ubi = findViewById(R.id.actual_ubi);
+        specific_ubi = findViewById(R.id.specific_ubi);
+        marker_ubi = findViewById(R.id.marker_ubi);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -72,6 +88,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             mMap.addMarker(markerOptions);
                             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng,5);
                             mMap.animateCamera(cameraUpdate);
+                            // for ChatRoom
+                            search_ubi_long = latLng.longitude;
+                            search_ubi_lat = latLng.latitude;
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -79,6 +98,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+
+        actual_ubi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent fromUsername = getIntent();
+                username = fromUsername.getExtras().getString("username");
+                Intent chat_intent = new Intent(MapsActivity.this,ChatRoom.class);
+                // send to ChatRoom
+                chat_intent.putExtra("username",username);
+                chat_intent.putExtra("actual_ubi_lat", actual_ubi_lat);
+                chat_intent.putExtra("actual_ubi_long", actual_ubi_long);
+                actual_ubi_check = true;
+                chat_intent.putExtra("actual_ubi_check", actual_ubi_check);
+                startActivity(chat_intent);
+            }
+        });
+
+        specific_ubi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent fromUsername = getIntent();
+                username = fromUsername.getExtras().getString("username");
+                Intent chat_intent2 = new Intent(MapsActivity.this,ChatRoom.class);
+                // send to ChatRoom
+                chat_intent2.putExtra("username",username);
+                chat_intent2.putExtra("search_ubi_lat", search_ubi_lat);
+                chat_intent2.putExtra("search_ubi_long", search_ubi_long);
+                input_ubi_check = true;
+                chat_intent2.putExtra("input_ubi_check", input_ubi_check);
+                startActivity(chat_intent2);
+            }
+        });
+
+        marker_ubi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent fromUsername = getIntent();
+                username = fromUsername.getExtras().getString("username");
+                Intent chat_intent3 = new Intent(MapsActivity.this,ChatRoom.class);
+                // send to ChatRoom
+                chat_intent3.putExtra("username",username);
+                chat_intent3.putExtra("marker_ubi_lat", search_ubi_lat);
+                chat_intent3.putExtra("marker_ubi_long", search_ubi_long);
+                startActivity(chat_intent3);
+            }
+        });
+
     }
 
     private void getLocalizacion() {
@@ -119,16 +185,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                LatLng miUbicacion = new LatLng(location.getLatitude(),location.getLongitude());
-                mMap.addMarker((new MarkerOptions().position(miUbicacion).title("PRUEBA")));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(miUbicacion));
+                LatLng myLocation = new LatLng(location.getLatitude(),location.getLongitude());
+                Marker marker = mMap.addMarker((new MarkerOptions()
+                        .position(myLocation)
+                        .title("Current location")
+                        .draggable(true)));
+                Log.e("MapsActivity marker lat: ", String.valueOf(marker.getPosition().latitude));
+                Log.e("MapsActivity marker long: ", String.valueOf(marker.getPosition().longitude));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(miUbicacion) // objective
+                        .target(myLocation) // objective
                         .zoom(15)
                         .bearing(90)         // direction
                         .tilt(45)            // change the angle
                         .build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                // for chatRoom
+                actual_ubi_lat = myLocation.latitude;
+                actual_ubi_long = myLocation.longitude;
             }
 
             @Override
@@ -142,6 +216,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationListener);
+
+    }
+
+    @Override
+    public void onMapLongClick(@NonNull LatLng latLng) {
+
 
     }
 }

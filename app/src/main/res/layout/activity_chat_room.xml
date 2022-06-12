@@ -19,24 +19,35 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="40dp">
+        android:orientation="vertical">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ChatMessagesList"
-            android:layout_width="match_parent"
+            android:layout_width="237dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:scrollbars="vertical" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="153dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="260dp"
+            android:layout_weight="3" />
+
+        <fragment
+            android:id="@+id/ubi"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="263dp"
+            android:layout_height="214dp"
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="10dp"
+            tools:context=".MapsActivity" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="5mm" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></ImageView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,6 +65,7 @@
                 tools:src="@drawable/ic_camera" />
 
             <ImageButton
+                android:id="@+id/map"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@color/design_default_color_background"
@@ -73,5 +85,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/SendButton" />
         </LinearLayout>
+
     </LinearLayout>
 </RelativeLayout>
