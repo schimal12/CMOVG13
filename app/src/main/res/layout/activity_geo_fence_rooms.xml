@@ -25,13 +25,33 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:includeFontPadding="false"
-            android:text="Select Location and Radius to Create A  Geo-Fenced Room"
+            android:text="Select Location to Create A  Geo-Fenced Room"
             android:textSize="14sp" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/inputLocation2"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                tools:ignore="Suspicious0dp"></EditText>
+
+            <ImageView
+                android:id="@+id/imageViewSearch2"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:src="@drawable/ic_search"
+                tools:ignore="MissingConstraints"></ImageView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_margin="20dp"
             android:layout_marginTop="50dp"
@@ -39,8 +59,9 @@
             android:gravity="center"
             android:orientation="vertical">
 
+
             <fragment
-                android:id="@+id/map"
+                android:id="@+id/map2"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
@@ -49,7 +70,7 @@
 
 
             <Button
-                android:id="@+id/confirmLocation"
+                android:id="@+id/confirmLocation2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
