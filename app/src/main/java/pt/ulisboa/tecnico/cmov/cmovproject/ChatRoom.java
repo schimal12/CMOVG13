@@ -1,30 +1,26 @@
 package pt.ulisboa.tecnico.cmov.cmovproject;
 
+import pt.ulisboa.tecnico.cmov.cmovproject.model.Message;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.SupportMapFragment;
+
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.service.autofill.ImageTransformation;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,11 +30,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -49,18 +43,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
-
-import pt.ulisboa.tecnico.cmov.cmovproject.model.Message;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -73,7 +63,7 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
     public EditText message;
     public Button sendMessage;
     public SocketIOApp app;
-    public Socket mSocket;
+    public io.socket.client.Socket mSocket;
     public TextView RoomName;
 
     // --------- camera image ---------
@@ -218,7 +208,7 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
         }
         if(imgFile != null)
         {
-            Uri imgUri = FileProvider.getUriForFile(this, "com.example.myapplication.fileprovider", imgFile);
+            Uri imgUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileProvider", imgFile);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
         }
 
