@@ -5,13 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,21 +29,23 @@ import io.socket.emitter.Emitter;
 
 public class ChatOverviewActivity extends AppCompatActivity {
 
-    ListView chatsListView;
+    public ListView chatsListView;
+    public EditText searchBar;
     public SocketIOApp app;
     public Socket mSocket;
     public List<String> RoomArrayList;
     public String username;
     ArrayAdapter<String> chatsArrayAdapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_overview);
 
         chatsListView = findViewById(R.id.chats_list_view);
+        searchBar = findViewById(R.id.searchBar);
 
         Intent fromUsername = getIntent();
         username = fromUsername.getExtras().getString("username");
@@ -50,7 +56,6 @@ public class ChatOverviewActivity extends AppCompatActivity {
         mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError1);
         mSocket.on(Socket.EVENT_CONNECT, onConnect);
         mSocket.on(Socket.EVENT_DISCONNECT, onDisconnect);
-        //Asking the server in which rooms the socket is.
         mSocket.emit("listrooms");
         mSocket.on("thisareyourrooms", ListenerRooms);
 
@@ -59,14 +64,24 @@ public class ChatOverviewActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String room = (String)chatsListView.getItemAtPosition(position);
+                String room = (String) chatsListView.getItemAtPosition(position);
                 Intent toChatRoom = new Intent(ChatOverviewActivity.this, ChatRoom.class);
-                toChatRoom.putExtra("chatroomname",room);
+                toChatRoom.putExtra("chatroomname", room);
                 toChatRoom.putExtra("username", username);
                 startActivity(toChatRoom);
             }
         });
-  }
+
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { chatsArrayAdapter.getFilter().filter(s);}
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
 
 
 
@@ -78,8 +93,10 @@ public Emitter.Listener ListenerRooms = new Emitter.Listener(){
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String data = (String)args[0];
+                JSONArray data0 = (JSONArray)args[0];
+                String data =  data0.toString();
                 String[] RoomList  = data.substring(1, data.length()-1).replace("\"","").split(",");
+
                 for(int j=0; j<RoomList.length;j++){
                     Log.d("Rooms",RoomList[j]);
                 }
@@ -92,6 +109,9 @@ public Emitter.Listener ListenerRooms = new Emitter.Listener(){
         });
     }
 };
+
+
+
 
 
     public Emitter.Listener onConnect = new Emitter.Listener() {

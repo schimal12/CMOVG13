@@ -5,9 +5,11 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.LOCATION_HARDWARE.location.gps"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-    <meta-data android:name="com.google.android.gms.version"
+    <uses-permission android:name="android.permission.LOCATION_HARDWARE.location.gps" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <meta-data
+        android:name="com.google.android.gms.version"
         android:value="@integer/google_play_services_version" />
 
     <uses-feature
@@ -29,7 +31,18 @@
         android:theme="@style/Theme.CMOVProject"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name=".PrivateChatRoom"
+            android:exported="false" />
+        <activity
+            android:name=".GeoFenceRooms"
+            android:exported="false" />
+        <activity
+            android:name=".PrivateRoom"
+            android:exported="false" />
+        <activity
+            android:name=".ChooseTypeofRoom"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

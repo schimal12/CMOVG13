@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast toastUserName = Toast.makeText(context, text, duration);
                     toastUserName.show();
                 }else{
-                    Intent toChatRoom = new Intent(LoginActivity.this, ChatRoomPicker.class);
+                    Intent toChatRoom = new Intent(LoginActivity.this, ChooseTypeofRoom.class);
                     toChatRoom.putExtra("username", username.getText().toString());
                     startActivity(toChatRoom);
                 }

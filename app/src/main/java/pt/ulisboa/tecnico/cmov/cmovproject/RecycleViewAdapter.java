@@ -38,8 +38,6 @@ class RecycleViewAdapater extends  RecyclerView.Adapter<RecycleViewAdapater.View
         return ListaMensajes.size();
     }
 
-
-
     @Override
     public RecycleViewAdapater.ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.message, parent, false);

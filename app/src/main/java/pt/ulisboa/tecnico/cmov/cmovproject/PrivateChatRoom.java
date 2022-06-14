@@ -33,7 +33,7 @@ import java.util.List;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-public class ChatRoom extends AppCompatActivity {
+public class PrivateChatRoom extends AppCompatActivity {
 
     //private Socket socket;
     private String username;
@@ -52,7 +52,8 @@ public class ChatRoom extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_room);
+        setContentView(R.layout.activity_private_chat_room);
+
 
         RoomName = (TextView)findViewById(R.id.RoomID);
         message = (EditText) findViewById(R.id.message);
@@ -116,7 +117,6 @@ public class ChatRoom extends AppCompatActivity {
         });
     }
 
-
     //Listeners
 
     public Emitter.Listener ListenUpdateMessage = new Emitter.Listener() {
@@ -149,7 +149,7 @@ public class ChatRoom extends AppCompatActivity {
 
     public Emitter.Listener ListenConnection = new Emitter.Listener(){
 
-     @Override
+        @Override
         public void call(Object... args) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -158,7 +158,7 @@ public class ChatRoom extends AppCompatActivity {
                     try{
                         String uNickname = data.getString("message");
                         String message = "The user "+uNickname+" has connected";
-                        Toast.makeText(ChatRoom.this, message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PrivateChatRoom.this, message, Toast.LENGTH_SHORT).show();
                     }catch (JSONException e){
                         e.printStackTrace();
                     }
@@ -204,7 +204,7 @@ public class ChatRoom extends AppCompatActivity {
                 @Override
                 public void run() {
                     String data = (String)args[0];
-                    Toast.makeText(ChatRoom.this, data, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PrivateChatRoom.this, data, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -217,14 +217,14 @@ public class ChatRoom extends AppCompatActivity {
                 @Override
                 public void run() {
                     String data = (String)args[0];
-                    Toast.makeText(ChatRoom.this, data, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PrivateChatRoom.this, data, Toast.LENGTH_SHORT).show();
                 }
             });
         }
     };
 
     public Emitter.Listener onConnect = new Emitter.Listener() {
-        @Override   
+        @Override
         public void call(Object... args) {
             Log.d("Socket", "Socket Connected!");
         }

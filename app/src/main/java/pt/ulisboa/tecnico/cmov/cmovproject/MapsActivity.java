@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import pt.ulisboa.tecnico.cmov.cmovg13.R;
+import pt.ulisboa.tecnico.cmov.cmovproject.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
@@ -63,9 +63,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         marker_ubi = findViewById(R.id.marker_ubi);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        //        .findFragmentById(R.id.map);
+        //mapFragment.getMapAsync(this);
 
         getLocalizacion();
 
@@ -157,8 +157,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-
-
 
     /**
      * Manipulates the map once available.
