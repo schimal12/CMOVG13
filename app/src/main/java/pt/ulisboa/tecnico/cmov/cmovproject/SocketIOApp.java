@@ -14,7 +14,7 @@ public class SocketIOApp {
 
     public SocketIOApp(){
             try {
-                this.socketio = IO.socket("http://192.168.1.76:7001/");
+                this.socketio = IO.socket("http://192.168.1.76:7000/");
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }

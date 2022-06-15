@@ -21,8 +21,8 @@ public class PrivateRoom extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_room);
 
-        namePrivateRoom = (EditText) findViewById(R.id.privatechatroomname);
-        goPrivateRoom = (Button) findViewById(R.id.enterprivatechatRoom);
+        namePrivateRoom = (EditText)findViewById(R.id.privatechatroomname);
+        goPrivateRoom = (Button)findViewById(R.id.enterprivatechatRoom);
 
         Intent fromUsername = getIntent();
         username = fromUsername.getExtras().getString("username"); // I am not sure of this part, I will check it later.
@@ -49,9 +49,5 @@ public class PrivateRoom extends AppCompatActivity {
         });
 
 
-
-
     }
-
-
 }

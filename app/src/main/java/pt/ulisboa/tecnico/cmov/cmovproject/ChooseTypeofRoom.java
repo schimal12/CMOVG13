@@ -46,9 +46,8 @@ public class ChooseTypeofRoom extends AppCompatActivity {
         geofenceRooms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent toGeofenceRoom = new Intent(ChooseTypeofRoom.this, GeoFenceRooms.class);
-                toGeofenceRoom.putExtra("username", username);
-                startActivity(toGeofenceRoom);
+                Intent toChatRoom = new Intent(ChooseTypeofRoom.this, ChatRoomPicker.class);
+                toChatRoom.putExtra("username", username);
             }
         });
 
