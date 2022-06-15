@@ -36,7 +36,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallback {
-    //TODO Tim: pass location object to chatroom
+    //TODO Tim: area and not exact location?
+    //TODO Tim: test
 
 
     public String username;
@@ -55,6 +56,9 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
     //marker_ubi - send pinned location
 
 
+    public Location chatroomLocation;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +74,7 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
 
         Intent fromUsername = getIntent();
         username = fromUsername.getExtras().getString("username"); // I am not sure of this part, I will check it later.
-        Intent toChatRoom = new Intent(GeoFenceRooms.this, ChatRoom.class);
+        Intent toChatRoom = new Intent(GeoFenceRooms.this, GeoFenceChatRoom.class);
         toChatRoom.putExtra("username", username);
 
         getLocalizacion();
@@ -138,6 +142,9 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
                 chat_intent.putExtra("actual_ubi_long", actual_ubi_long);
                 actual_ubi_check = true;
                 chat_intent.putExtra("actual_ubi_check", actual_ubi_check);
+                if (chatroomLocation != null) {
+                    chat_intent.putExtra("chatroomLocation", chatroomLocation);
+                }
                 startActivity(chat_intent);
             }
         });
@@ -147,13 +154,16 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
             public void onClick(View v) {
                 Intent fromUsername = getIntent();
                 username = fromUsername.getExtras().getString("username");
-                Intent chat_intent2 = new Intent(GeoFenceRooms.this, ChatRoom.class);
+                Intent chat_intent2 = new Intent(GeoFenceRooms.this, GeoFenceChatRoom.class);
                 // send to ChatRoom
                 chat_intent2.putExtra("username", username);
                 chat_intent2.putExtra("search_ubi_lat", search_ubi_lat);
                 chat_intent2.putExtra("search_ubi_long", search_ubi_long);
                 input_ubi_check = true;
                 chat_intent2.putExtra("input_ubi_check", input_ubi_check);
+                if (chatroomLocation != null) {
+                    chat_intent2.putExtra("chatroomLocation", chatroomLocation);
+                }
                 startActivity(chat_intent2);
             }
         });
@@ -163,11 +173,14 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
             public void onClick(View v) {
                 Intent fromUsername = getIntent();
                 username = fromUsername.getExtras().getString("username");
-                Intent chat_intent3 = new Intent(GeoFenceRooms.this, ChatRoom.class);
+                Intent chat_intent3 = new Intent(GeoFenceRooms.this, GeoFenceChatRoom.class);
                 // send to ChatRoom
                 chat_intent3.putExtra("username", username);
                 chat_intent3.putExtra("marker_ubi_lat", search_ubi_lat);
                 chat_intent3.putExtra("marker_ubi_long", search_ubi_long);
+                if (chatroomLocation != null) {
+                    chat_intent3.putExtra("chatroomLocation", chatroomLocation);
+                }
                 startActivity(chat_intent3);
             }
         });
@@ -202,6 +215,8 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
+
+
                 LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 Marker marker = GeoFenceRooms.this.googleMap.addMarker((new MarkerOptions()
                         .position(myLocation)
@@ -220,6 +235,9 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
                 // for chatRoom
                 actual_ubi_lat = myLocation.latitude;
                 actual_ubi_long = myLocation.longitude;
+
+                chatroomLocation = location;
+
             }
 
 
