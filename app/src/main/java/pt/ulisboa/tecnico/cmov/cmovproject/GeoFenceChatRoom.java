@@ -1,12 +1,8 @@
 package pt.ulisboa.tecnico.cmov.cmovproject;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -19,11 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,15 +32,14 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import pt.ulisboa.tecnico.cmov.cmovproject.model.Message;
 
-public class GeoFenceChatRoom extends AppCompatActivity implements LocationListener {
+public class GeoFenceChatRoom extends AppCompatActivity {
 
 
     //TODO Tim: implement method to check location of user if still same as location of chatroom
-    //TODO Tim: test
 
+    //private Socket socket;
     private String username;
     private String roomname;
-    private Location chatroomLocation;
     public RecyclerView recyclerView;
     public List<Message> ListaMensajes;
     public RecycleViewAdapater recycleViewAdapater;
@@ -58,19 +51,12 @@ public class GeoFenceChatRoom extends AppCompatActivity implements LocationListe
     ImageButton camera_open_id;
     ImageView click_image_id;
 
-    private Boolean sameLocation;
-
-    protected LocationManager locationManager;
-    protected LocationListener locationListener;
-    protected Context context;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
 
-        RoomName = (TextView) findViewById(R.id.RoomID);
+        RoomName = (TextView)findViewById(R.id.RoomID);
         message = (EditText) findViewById(R.id.message);
         sendMessage = (Button) findViewById(R.id.sendMessage);
         ListaMensajes = new ArrayList<>();
@@ -83,22 +69,7 @@ public class GeoFenceChatRoom extends AppCompatActivity implements LocationListe
         Intent fromUsername = getIntent();
         username = fromUsername.getExtras().getString("username");
         roomname = fromUsername.getExtras().getString("chatroomname");
-        chatroomLocation = (Location) fromUsername.getExtras().get("chatroomLocation");
-        RoomName.setText("Room: " + roomname);
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 3, this);
-
+        RoomName.setText("Room: "+roomname);
 
         // CAMERA
         // by ID we can get each component which id is assigned in XML file
@@ -111,7 +82,8 @@ public class GeoFenceChatRoom extends AppCompatActivity implements LocationListe
             @Override
             public void onClick(View v) {
 
-                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
                 }
                 Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -144,20 +116,6 @@ public class GeoFenceChatRoom extends AppCompatActivity implements LocationListe
                 message.setText(" ");
             }
         });
-
-
-    }
-
-
-    @Override
-    public void onLocationChanged(Location location) {
-        //TODO Tim: test and granularity
-        sameLocation = location == chatroomLocation;
-
-        if (!sameLocation) {
-            mSocket.disconnect();
-        }
-
     }
 
 
@@ -171,7 +129,7 @@ public class GeoFenceChatRoom extends AppCompatActivity implements LocationListe
                 public void run() {
                     Log.d("Historial", args[0].toString());
                     try {
-                        JSONArray data0 = (JSONArray) args[0];
+                        JSONArray data0 =  (JSONArray)args[0];
                         for (int i = 0; i < data0.length(); i++) {
                             JSONObject Currentmessage = data0.getJSONObject(i);
                             String nickname = Currentmessage.getString("username");
@@ -183,7 +141,7 @@ public class GeoFenceChatRoom extends AppCompatActivity implements LocationListe
                         recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
                         recycleViewAdapater.notifyDataSetChanged();
                         recyclerView.setAdapter(recycleViewAdapater);
-                    } catch (JSONException e) {
+                    }catch (JSONException e){
                         e.printStackTrace();
                     }
                 }
@@ -191,19 +149,19 @@ public class GeoFenceChatRoom extends AppCompatActivity implements LocationListe
         }
     };
 
-    public Emitter.Listener ListenConnection = new Emitter.Listener() {
+    public Emitter.Listener ListenConnection = new Emitter.Listener(){
 
         @Override
         public void call(Object... args) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    JSONObject data = (JSONObject) args[0];
-                    try {
+                    JSONObject data = (JSONObject)args[0];
+                    try{
                         String uNickname = data.getString("message");
-                        String message = "The user " + uNickname + " has connected";
+                        String message = "The user "+uNickname+" has connected";
                         Toast.makeText(GeoFenceChatRoom.this, message, Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e) {
+                    }catch (JSONException e){
                         e.printStackTrace();
                     }
                 }
@@ -212,22 +170,22 @@ public class GeoFenceChatRoom extends AppCompatActivity implements LocationListe
     };
 
 
-    public Emitter.Listener ListenMessages = new Emitter.Listener() {
+    public Emitter.Listener ListenMessages = new Emitter.Listener(){
 
         @Override
         public void call(Object... args) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    JSONObject data = (JSONObject) args[0];
+                    JSONObject data = (JSONObject)args[0];
                     try {
                         String uNickname = data.getString("uNickname");
                         String messageText = data.getString("message");
                         Date date = Calendar.getInstance().getTime();
                         Message message = new Message(messageText, uNickname, date);
                         ListaMensajes.add(message);
-                        for (int i = 0; i < ListaMensajes.size(); i++) {
-                            Log.d("Messages", ListaMensajes.get(i).getUsername() + " " + ListaMensajes.get(i).getMessage());
+                        for(int i = 0; i<ListaMensajes.size();i++){
+                            Log.d("Messages", ListaMensajes.get(i).getUsername()+" "+ListaMensajes.get(i).getMessage());
                         }
                         recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
                         recycleViewAdapater.notifyDataSetChanged();
@@ -240,27 +198,27 @@ public class GeoFenceChatRoom extends AppCompatActivity implements LocationListe
         }
     };
 
-    public Emitter.Listener ListenUserRoom = new Emitter.Listener() {
+    public Emitter.Listener ListenUserRoom = new Emitter.Listener(){
 
         @Override
         public void call(Object... args) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    String data = (String) args[0];
+                    String data = (String)args[0];
                     Toast.makeText(GeoFenceChatRoom.this, data, Toast.LENGTH_SHORT).show();
                 }
             });
         }
     };
 
-    public Emitter.Listener ListerUserDisconnected = new Emitter.Listener() {
+    public Emitter.Listener ListerUserDisconnected = new Emitter.Listener(){
         @Override
         public void call(Object... args) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    String data = (String) args[0];
+                    String data = (String)args[0];
                     Toast.makeText(GeoFenceChatRoom.this, data, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -280,8 +238,8 @@ public class GeoFenceChatRoom extends AppCompatActivity implements LocationListe
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    for (Object obj : args) {
-                        Log.v("Socket Test", "" + obj);
+                    for(Object obj:args){
+                        Log.v("Socket Test", ""+obj);
                     }
                     Toast.makeText(getApplicationContext(), "Unable to connect to NodeJS server", Toast.LENGTH_LONG).show();
                 }
