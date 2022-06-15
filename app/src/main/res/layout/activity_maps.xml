@@ -44,7 +44,7 @@
             android:id="@+id/actual_ubi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Send actual location"
+            android:text="Send actual ubication"
             tools:ignore="MissingConstraints" />
 
         <Button
