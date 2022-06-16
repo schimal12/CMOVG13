@@ -16,10 +16,9 @@ public class ChooseTypeofRoom extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_typeof_room);
 
-        Button publicRooms = (Button)findViewById(R.id.enterchatroom);
-        Button privateRooms = (Button)findViewById(R.id.privateroom);
-        Button geofenceRooms = (Button)findViewById(R.id.geofenceRoom);
-
+        Button publicRooms = (Button) findViewById(R.id.enterchatroom);
+        Button privateRooms = (Button) findViewById(R.id.privateroom);
+        Button geofenceRooms = (Button) findViewById(R.id.geofenceRoom);
 
 
         Intent fromUsername = getIntent();
@@ -51,7 +50,6 @@ public class ChooseTypeofRoom extends AppCompatActivity {
                 startActivity(toGeofenceRoom);
             }
         });
-
 
 
     }

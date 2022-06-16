@@ -1,9 +1,9 @@
 package pt.ulisboa.tecnico.cmov.cmovproject;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.Context;
@@ -26,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -35,7 +36,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallback {
+public class GeoFenceRooms extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
     //TODO Tim: area and not exact location?
     //TODO Tim: test
 
@@ -46,7 +47,6 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
     private GoogleMap googleMap;
 
     Button actual_ubi, specific_ubi, marker_ubi;
-    // for ChatRoom
     double actual_ubi_lat, actual_ubi_long;
     double search_ubi_lat, search_ubi_long;
     Boolean actual_ubi_check, input_ubi_check = false;
@@ -63,13 +63,14 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo_fence_rooms);
+
+
         imageViewSearch = findViewById(R.id.imageViewSearch2);
         inputLocation = findViewById(R.id.inputLocation2);
-       /*
+
         actual_ubi = findViewById(R.id.actual_ubi2);
         specific_ubi = findViewById(R.id.specific_ubi2);
         marker_ubi = findViewById(R.id.marker_ubi2);
-        */
 
 
         Intent fromUsername = getIntent();
@@ -109,26 +110,6 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-        /*
-
-
-        imageViewSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO Tim: get location name from map
-                String chatRoomName = "dummy location";
-
-
-                Intent toChatRoom = new Intent(GeoFenceRooms.this, ChatRoom.class);
-                toChatRoom.putExtra("username", username);
-                toChatRoom.putExtra("chatroomname", chatRoomName);
-                startActivity(toChatRoom);
-
-            }
-        });
-
-         */
-
 
         actual_ubi.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,9 +123,12 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
                 chat_intent.putExtra("actual_ubi_long", actual_ubi_long);
                 actual_ubi_check = true;
                 chat_intent.putExtra("actual_ubi_check", actual_ubi_check);
+
                 if (chatroomLocation != null) {
                     chat_intent.putExtra("chatroomLocation", chatroomLocation);
                 }
+
+
                 startActivity(chat_intent);
             }
         });
@@ -161,9 +145,12 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
                 chat_intent2.putExtra("search_ubi_long", search_ubi_long);
                 input_ubi_check = true;
                 chat_intent2.putExtra("input_ubi_check", input_ubi_check);
+
                 if (chatroomLocation != null) {
                     chat_intent2.putExtra("chatroomLocation", chatroomLocation);
                 }
+
+
                 startActivity(chat_intent2);
             }
         });
@@ -178,9 +165,12 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
                 chat_intent3.putExtra("username", username);
                 chat_intent3.putExtra("marker_ubi_lat", search_ubi_lat);
                 chat_intent3.putExtra("marker_ubi_long", search_ubi_long);
+
                 if (chatroomLocation != null) {
                     chat_intent3.putExtra("chatroomLocation", chatroomLocation);
                 }
+
+
                 startActivity(chat_intent3);
             }
         });
@@ -242,30 +232,33 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
 
 
         };
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
 
-        /*
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                checkBounds();
-            }
-        });
+//        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+//            @Override
+//            public void onCameraChange(CameraPosition cameraPosition) {
+//                checkBounds();
+//            }
+//        });
 
-         */
+
     }
 
-    /*
-    public void checkBounds() {
-        // allowedbounds must be generated only once, in onCreate, because it will be a fixed area
-        LatLng actualCenter = mMap.getProjection().getVisibleRegion().getCenter();
-        if (allowedBounds.contains(actualCenter)) {
-            return;
-        } else {
-        }
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+
     }
-    */
+
+
+//    public void checkBounds() {
+//        // allowedbounds must be generated only once, in onCreate, because it will be a fixed area
+//        LatLng actualCenter = mMap.getProjection().getVisibleRegion().getCenter();
+//        if (allowedBounds.contains(actualCenter)) {
+//            return;
+//        } else {
+//        }
+//    }
 
 
 }

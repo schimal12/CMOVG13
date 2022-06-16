@@ -22,17 +22,7 @@
         <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/activity_private_chat_room.xml" value="0.4046875" />
         <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/activity_private_room.xml" value="0.278125" />
         <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/message.xml" value="0.15942028985507245" />
-        <entry key="app/src/main/res/layout/activity_chat_overview.xml" value="0.32427673339843754" />
-        <entry key="app/src/main/res/layout/activity_chat_room.xml" value="0.23497161865234373" />
-        <entry key="app/src/main/res/layout/activity_chat_room_picker.xml" value="0.24705882352941178" />
-        <entry key="app/src/main/res/layout/activity_choose_typeof_room.xml" value="0.2153846153846154" />
-        <entry key="app/src/main/res/layout/activity_geo_fence_chat_room.xml" value="0.21724700927734364" />
         <entry key="app/src/main/res/layout/activity_geo_fence_rooms.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.3336990356445312" />
-        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_private_chat_room.xml" value="0.25865478515624996" />
-        <entry key="app/src/main/res/layout/activity_private_room.xml" value="0.4504364013671875" />
-        <entry key="app/src/main/res/layout/activity_register.xml" value="0.36468353271484366" />
       </map>
     </option>
   </component>
