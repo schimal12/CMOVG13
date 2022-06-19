@@ -22,6 +22,25 @@
         <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/activity_private_chat_room.xml" value="0.4046875" />
         <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/activity_private_room.xml" value="0.278125" />
         <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/message.xml" value="0.15942028985507245" />
+        <entry key="app/src/main/res/drawable-anydpi/ic_camera.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-anydpi/ic_map.xml" value="0.11" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.11" />
+        <entry key="app/src/main/res/drawable/ic_camera.xml" value="0.11" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.11" />
+        <entry key="app/src/main/res/drawable/ic_map.xml" value="0.11" />
+        <entry key="app/src/main/res/drawable/ic_search.xml" value="0.11" />
+        <entry key="app/src/main/res/layout/activity_chat_overview.xml" value="0.14867553710937498" />
+        <entry key="app/src/main/res/layout/activity_chat_room.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_chat_room_picker.xml" value="0.16296296296296298" />
+        <entry key="app/src/main/res/layout/activity_choose_typeof_room.xml" value="0.16296296296296298" />
+        <entry key="app/src/main/res/layout/activity_geo_fence_rooms.xml" value="0.16296296296296298" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.16311399443929564" />
+        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.16296296296296298" />
+        <entry key="app/src/main/res/layout/activity_private_chat_room.xml" value="0.14772727272727273" />
+        <entry key="app/src/main/res/layout/activity_private_room.xml" value="0.34924163818359366" />
+        <entry key="app/src/main/res/layout/activity_register.xml" value="0.1753189086914062" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.11" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.11" />
       </map>
     </option>
   </component>
