@@ -6,7 +6,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "pt.ulisboa.tecnico.cmov.cmovproject2"
+        applicationId "pt.ulisboa.tecnico.cmov.cmovproject"
         minSdk 30
         targetSdk 32
         versionCode 1
