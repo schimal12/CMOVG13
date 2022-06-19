@@ -44,7 +44,6 @@
                 android:id="@+id/camera"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@color/design_default_color_background"
                 android:icon="@drawable/ic_camera"
                 android:src="@drawable/ic_camera"
                 tools:src="@drawable/ic_camera" />
@@ -53,7 +52,6 @@
                 android:id="@+id/map"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@color/design_default_color_background"
                 android:src="@drawable/ic_map"
                 tools:src="@drawable/ic_map" />
 
