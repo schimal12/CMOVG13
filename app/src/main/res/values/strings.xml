@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CMOVG13</string>
+    <string name="app_name">ConversationalIST</string>
     <string name="sign_up">Sign Up</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
@@ -16,4 +16,6 @@
     <string name="log_into_your_account">Log into your account</string>
     <string name="i_don_t_have_an_account">I don\'t have an account</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="create_or_join_to_a_room">Create or join to a room</string>
+
 </resources>

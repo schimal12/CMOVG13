@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">ConversationalIST</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="password">Passwort</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="SendButton">Senden</string>
+    <string name="chats_overview_title">Chats</string>
+    <string name="anonymous_login">Anonymes Login</string>
+    <string name="choose_an_username">Wähle einen Username</string>
+    <string name="enter_your_password">Gib dein Passwort ein</string>
+    <string name="enter_your_username">Gib dein Username ein</string>
+    <string name="sign_in">Einloggen</string>
+    <string name="i_don_t_have_an_account">Ich habe keinen Account</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="create_or_join_to_a_room">Erstelle oder trete einem Chat bei</string>
+    <string name="log_into_your_account">Logge dich ein</string>
+    <string name="enter">Betreten</string>
+    <string name="welcome_back">Anmelden</string>
+
+</resources>

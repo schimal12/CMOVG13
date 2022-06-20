@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:includeFontPadding="false"
-            android:text="Create or Join to a Room"
+            android:text="@string/create_or_join_to_a_room"
             android:textSize="14sp"/>
 
         <Button
