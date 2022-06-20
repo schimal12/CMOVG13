@@ -1,0 +1,87 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Room"
+            android:id="@+id/RoomID"
+            android:textStyle="bold"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Share"
+            android:textSize="10dp"
+            android:gravity="right"
+            android:layout_marginLeft="290dp"
+            android:id="@+id/sharePrivateRoom"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ChatMessagesList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:layout_marginTop="60dp"
+            android:scrollbars="vertical" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5mm" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <ImageButton
+                android:id="@+id/camera"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@color/design_default_color_background"
+                android:icon="@drawable/ic_camera"
+                android:src="@drawable/ic_camera"
+                tools:src="@drawable/ic_camera" />
+
+            <ImageButton
+                android:id="@+id/map"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@color/design_default_color_background"
+                android:src="@drawable/ic_map"
+                tools:src="@drawable/ic_map" />
+
+            <EditText
+                android:id="@+id/message"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:hint="Write" />
+
+            <Button
+                android:id="@+id/sendMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/SendButton" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>
