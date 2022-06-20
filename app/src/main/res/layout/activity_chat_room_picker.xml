@@ -16,7 +16,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20sp"
             android:includeFontPadding="false"
-            android:text="Chat Room"
+            android:text="@string/chat_room"
             android:textSize="32sp"/>
 
         <TextView
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:includeFontPadding="false"
-            android:text="Create or search a Public Room"
+            android:text="@string/Create_or_search_a_Public_Room"
             android:textSize="14sp"/>
 
         <LinearLayout
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="Chat room name"
+                android:text="@string/chat_room_name"
                 android:textSize="15sp"/>
 
             <EditText
@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:hint="Enter chat room name"
+                android:hint="@string/Enter_a_chat_room_name"
                 android:inputType="text"
                 android:singleLine="true"/>
 
@@ -56,7 +56,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="60dp"
                 android:gravity="center"
-                android:text="Enter Room"
+                android:text="@string/enter_room"
                 android:textAlignment="center"
                 android:textSize="20sp"/>
 
@@ -80,7 +80,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="60dp"
                 android:gravity="center"
-                android:text="Check existent Rooms"
+                android:text="@string/Check_existing_Rooms"
                 android:textAlignment="center"
                 android:textSize="20sp"/>
 

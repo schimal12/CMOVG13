@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
 
     <LinearLayout
@@ -10,20 +10,20 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/RoomID"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Room"
-            android:id="@+id/RoomID"
-            android:textStyle="bold"/>
+            android:text="@string/room"
+            android:textStyle="bold" />
 
         <Button
+            android:id="@+id/sharePrivateRoom"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Share"
-            android:textSize="10dp"
-            android:gravity="right"
             android:layout_marginLeft="290dp"
-            android:id="@+id/sharePrivateRoom"/>
+            android:gravity="right"
+            android:text="@string/share"
+            android:textSize="10dp" />
 
     </LinearLayout>
 
@@ -36,8 +36,8 @@
             android:id="@+id/ChatMessagesList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
             android:layout_marginTop="60dp"
+            android:layout_weight="3"
             android:scrollbars="vertical" />
 
         <View
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
-                android:hint="Write" />
+                android:hint="@string/write" />
 
             <Button
                 android:id="@+id/sendMessage"

@@ -17,5 +17,27 @@
     <string name="i_don_t_have_an_account">I don\'t have an account</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="create_or_join_to_a_room">Create or join to a room</string>
+    <string name="search_groups">Search groups</string>
+    <string name="write">Write</string>
+    <string name="chat_room">Chat Room</string>
+    <string name="Create_or_search_a_Public_Room">Create or search a Public Room</string>
+    <string name="chat_room_name">Chat room name</string>
+    <string name="Enter_a_chat_room_name">Enter a chat room name</string>
+    <string name="enter_room">Enter Room</string>
+    <string name="Check_existing_Rooms">Check existing Rooms</string>
+    <string name="public_room">Public Room</string>
+    <string name="private_room">Private Room</string>
+    <string name="geo_fence_room">Geo Fence Room</string>
+    <string name="send_current_location">Send Current Location</string>
+    <string name="send_input_location">Send Input Location</string>
+    <string name="send_pinned_location">Send Pinned Location</string>
+    <string name="room">Room</string>
+    <string name="share">Share</string>
+    <string name="create_a_private_room">Create a Private Room</string>
+    <string name="create_room">Create Room</string>
+    <string name="create_your_account">Create Your Account</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="nickname">Nickname:</string>
+    <string name="message">message</string>
 
 </resources>
