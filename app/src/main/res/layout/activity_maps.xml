@@ -44,21 +44,21 @@
             android:id="@+id/actual_ubi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Send actual ubication"
+            android:text="Choose actual ubication"
             tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/specific_ubi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Send the input location"
+            android:text="Choose the input location"
             tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/marker_ubi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Send the marker location"
+            android:text="Choose the marker location"
             tools:ignore="MissingConstraints" />
 
     </LinearLayout>

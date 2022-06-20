@@ -1,9 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GeoFenceRooms">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fillViewport="true">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20sp"
+            android:includeFontPadding="false"
+            android:text="Chat Room"
+            android:textSize="32sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:includeFontPadding="false"
+            android:text="Create a GeoFence Room"
+            android:textSize="14sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Chat room name"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/geoFenceChatRoomName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Enter chat room name"
+                android:inputType="text"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Chat room radio"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/radio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Enter the radio"
+                android:inputType="number"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Chat room location"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <fragment
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="230dp"
+                    android:layout_height="230dp"
+                    android:layout_marginTop="10dp"
+                    tools:context=".MapsActivity" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginTop="40dp">
+
+                    <Button
+                        android:id="@+id/actual_ubi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Actual location" />
+
+                    <Button
+                        android:id="@+id/input_ubi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Input location" />
+
+                    <Button
+                        android:id="@+id/marker_ubi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Marker location" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/enterGeofenceChatRoom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="Create Room"
+                android:textAlignment="center"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

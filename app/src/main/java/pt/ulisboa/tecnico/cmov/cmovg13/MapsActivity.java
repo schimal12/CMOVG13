@@ -102,8 +102,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Intent fromUsername = getIntent();
                 username = fromUsername.getExtras().getString("username");
-                Intent chat_intent = new Intent(MapsActivity.this,ChatRoom.class);
                 // send to ChatRoom
+                Intent chat_intent = new Intent(MapsActivity.this,ChatRoom.class);
                 chat_intent.putExtra("username",username);
                 chat_intent.putExtra("actual_ubi_lat", actual_ubi_lat);
                 chat_intent.putExtra("actual_ubi_long", actual_ubi_long);
