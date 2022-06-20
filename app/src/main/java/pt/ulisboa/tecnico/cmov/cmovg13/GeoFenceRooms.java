@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,10 +35,11 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
 
     public String username;
     public EditText nameGeoFenceRoom;
-    public Button goGeoFenceRoom;
 
     private EditText radio;
-    private float latitude,longitude;
+    private double send_latitude;
+    private double send_longitude;
+    private String send_radio;
     public Button actual_loc,input_loc,marker_loc;
     private Boolean actual_enabled,input_enabled,marker_enabled;
 
@@ -51,7 +53,6 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
         marker_enabled = false;
 
         nameGeoFenceRoom = (EditText)findViewById(R.id.geoFenceChatRoomName);
-        goGeoFenceRoom = (Button)findViewById(R.id.enterGeofenceChatRoom);
         radio = (EditText)findViewById(R.id.radio);
 
         actual_loc = (Button)findViewById(R.id.actual_ubi);
@@ -70,9 +71,11 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
         Intent toChatRoom = new Intent(GeoFenceRooms.this, ChatRoom.class);
         toChatRoom.putExtra("username", username);
 
-        goGeoFenceRoom.setOnClickListener(new View.OnClickListener() {
+
+        actual_loc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                actual_enabled = true;
                 if (nameGeoFenceRoom.getText().toString().isEmpty()) {
                     Context context = getApplicationContext();
                     CharSequence text = "Please, enter a chat room name";
@@ -96,18 +99,15 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
                 }
                 else {
                     //Need to implement correct authentication. Could be using NodeJS or Firebase.
-                    Intent toChatRoom = new Intent(GeoFenceRooms.this, ChatRoom.class);
-                    toChatRoom.putExtra("username", username);
-                    toChatRoom.putExtra("chatroomname", nameGeoFenceRoom.getText().toString());
-                    startActivity(toChatRoom);
+                    Intent toGeoFenceChatRoom = new Intent(GeoFenceRooms.this, GeoFenceChatRoom.class);
+                    toGeoFenceChatRoom.putExtra("username", username);
+                    toGeoFenceChatRoom.putExtra("chatroomname", nameGeoFenceRoom.getText().toString());
+                    toGeoFenceChatRoom.putExtra("send_latitude",send_latitude);
+                    toGeoFenceChatRoom.putExtra("send_longitude",send_longitude);
+                    send_radio = radio.getText().toString();
+                    toGeoFenceChatRoom.putExtra("send_radio",send_radio);
+                    startActivity(toGeoFenceChatRoom);
                 }
-            }
-        });
-
-        actual_loc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actual_enabled = true;
             }
         });
 
@@ -124,6 +124,7 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
                 marker_enabled = true;
             }
         });
+
     }
 
     private void getLocalization() {
@@ -141,6 +142,7 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
     public void onMapLongClick(@NonNull LatLng latLng) {
 
     }
+
 
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -170,9 +172,11 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
                         .tilt(45)            // change the angle
                         .build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                // for chatRoom
-                actual_ubi_lat = myLocation.latitude;
-                actual_ubi_long = myLocation.longitude;
+                // for GeoFenceChatRoom
+                send_latitude = myLocation.latitude;
+                Log.e("Latitude ", String.valueOf(send_latitude));
+                send_longitude = myLocation.longitude;
+                Log.e("LOngitude ", String.valueOf(send_longitude));
             }
 
             @Override
