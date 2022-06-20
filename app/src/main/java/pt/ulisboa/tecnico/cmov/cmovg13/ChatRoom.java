@@ -2,35 +2,26 @@ package pt.ulisboa.tecnico.cmov.cmovg13;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.service.autofill.ImageTransformation;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -48,15 +39,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import pt.ulisboa.tecnico.cmov.cmovg13.model.Message;
 
@@ -69,6 +55,9 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
     public RecycleViewAdapater recycleViewAdapater;
     public EditText message;
     public Button sendMessage;
+
+    public TextView RoomName;
+    private String roomname;
 
     // --------- camera image ---------
     ImageButton camera_open_id;
@@ -97,6 +86,13 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        RoomName = (TextView)findViewById(R.id.RoomID);
+
+        Intent fromUsername = getIntent();
+        username = fromUsername.getExtras().getString("username");
+        roomname = fromUsername.getExtras().getString("chatroomname");
+        RoomName.setText("Room: "+roomname);
 
         // --------- Camera ---------
         camera_open_id = (ImageButton) findViewById(R.id.camera);
@@ -167,8 +163,8 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
                         try {
                             String nickname = data.getString("sNickname");
                             String message = data.getString("message");
-                            Message m = new Message(nickname, message);
-                            ListaMensajes.add(m);
+                            //Message m = new Message(nickname, message, date);
+                            //ListaMensajes.add(m);
                             recycleViewAdapater = new RecycleViewAdapater(ListaMensajes);
                             recycleViewAdapater.notifyDataSetChanged();
                             recyclerView.setAdapter(recycleViewAdapater);
@@ -319,6 +315,31 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
                 .tilt(45)
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    public static class SocketIOApp {
+        private static SocketIOApp socketManager;
+        private Socket socketio;
+
+        public SocketIOApp(){
+            try {
+                this.socketio = IO.socket("http://192.168.1.76:7000/");
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+            socketio.connect();
+        }
+
+        public static SocketIOApp getInstance(){
+            if(socketManager == null){
+                socketManager = new SocketIOApp();
+            }
+            return socketManager;
+        }
+
+        public Socket getSocket() {
+            return socketio;
+        }
     }
 }
 

@@ -81,6 +81,21 @@
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
+            android:name=".ChooseTypeofRoom"
+            android:exported="false" />
+        <activity
+            android:name=".ChatRoomPicker"
+            android:exported="false" />
+        <activity
+            android:name=".GeoFenceRooms"
+            android:exported="false" />
+        <activity
+            android:name=".PrivateChatRoom"
+            android:exported="false" />
+        <activity
+            android:name=".PrivateRoom"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>

@@ -1,11 +1,13 @@
 package pt.ulisboa.tecnico.cmov.cmovg13.model;
 
+import java.util.Date;
+
 public class Message {
     private String message;
     private String username;
 
 
-    public Message(String message, String username) {
+    public Message(String message, String username, Date date) {
         this.message = message;
         this.username = username;
     }

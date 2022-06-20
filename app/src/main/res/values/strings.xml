@@ -7,5 +7,13 @@
     <string name="welcome_back">Sign in</string>
     <string name="SendButton">Send</string>
     <string name="chats_overview_title">Chats</string>
+    <string name="anonymous_login">Anonymous Login</string>
+    <string name="choose_an_username">Choose an username</string>
+    <string name="enter">Enter</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="enter_your_username">Enter your username</string>
+    <string name="sign_in">Sign in</string>
+    <string name="log_into_your_account">Log into your account</string>
+    <string name="i_don_t_have_an_account">I don\'t have an account</string>
     <string name="title_activity_maps">MapsActivity</string>
 </resources>
