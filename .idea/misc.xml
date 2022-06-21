@@ -21,6 +21,7 @@
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.16" />
         <entry key="app/src/main/res/layout/activity_private_chat_room.xml" value="0.17958459979736577" />
         <entry key="app/src/main/res/layout/activity_private_room.xml" value="0.17958459979736577" />
+        <entry key="app/src/main/res/layout/activity_see_the_geofence.xml" value="0.1" />
         <entry key="app/src/main/res/xml/file_paths.xml" value="0.14402173913043478" />
       </map>
     </option>

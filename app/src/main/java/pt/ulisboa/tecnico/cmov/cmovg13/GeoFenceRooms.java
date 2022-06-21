@@ -9,6 +9,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -24,6 +25,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -99,14 +102,14 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
                 }
                 else {
                     //Need to implement correct authentication. Could be using NodeJS or Firebase.
-                    Intent toGeoFenceChatRoom = new Intent(GeoFenceRooms.this, GeoFenceChatRoom.class);
-                    toGeoFenceChatRoom.putExtra("username", username);
-                    toGeoFenceChatRoom.putExtra("chatroomname", nameGeoFenceRoom.getText().toString());
-                    toGeoFenceChatRoom.putExtra("send_latitude",send_latitude);
-                    toGeoFenceChatRoom.putExtra("send_longitude",send_longitude);
+                    Intent seeTheGeoFence = new Intent(GeoFenceRooms.this, seeTheGeoFence.class);
+                    seeTheGeoFence.putExtra("username", username);
+                    seeTheGeoFence.putExtra("chatroomname", nameGeoFenceRoom.getText().toString());
+                    seeTheGeoFence.putExtra("send_latitude",send_latitude);
+                    seeTheGeoFence.putExtra("send_longitude",send_longitude);
                     send_radio = radio.getText().toString();
-                    toGeoFenceChatRoom.putExtra("send_radio",send_radio);
-                    startActivity(toGeoFenceChatRoom);
+                    seeTheGeoFence.putExtra("send_radio",send_radio);
+                    startActivity(seeTheGeoFence);
                 }
             }
         });
@@ -147,6 +150,8 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        final Circle[] geoFenceLimits = new Circle[1];
+
         if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
             return;
         }
@@ -177,6 +182,7 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
                 Log.e("Latitude ", String.valueOf(send_latitude));
                 send_longitude = myLocation.longitude;
                 Log.e("LOngitude ", String.valueOf(send_longitude));
+
             }
 
             @Override
