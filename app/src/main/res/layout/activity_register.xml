@@ -3,73 +3,81 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Signup"
-            android:textSize="32sp"
-            android:layout_marginTop="20sp"
             android:layout_marginStart="20dp"
-            android:includeFontPadding="false">
-        </TextView>
+            android:layout_marginTop="20sp"
+            android:includeFontPadding="false"
+            android:text="Signup"
+            android:textSize="32sp"></TextView>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create your account"
             android:layout_marginStart="20dp"
             android:includeFontPadding="false"
-            android:textSize="14sp">
-        </TextView>
+            android:text="Create your account"
+            android:textSize="14sp"></TextView>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="20dp">
+            android:layout_margin="20dp"
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:text="@string/username"
-                android:layout_marginTop="15dp"
                 android:textSize="15sp"></TextView>
+
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/registerUsername"
-                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:hint="Enter your username"
-                android:layout_marginTop="5dp"
-                android:singleLine="true"></EditText>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/email"
-                android:layout_marginTop="15dp"
-                android:textSize="15sp"></TextView>
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/registerEmail"
                 android:inputType="text"
-                android:hint="Enter your email"
-                android:layout_marginTop="5dp"
                 android:singleLine="true"></EditText>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/password"
                 android:layout_marginTop="15dp"
+                android:text="@string/email"
                 android:textSize="15sp"></TextView>
+
             <EditText
+                android:id="@+id/registerEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/registerPassword"
-                android:inputType="textPassword"
-                android:hint="Enter your password"
                 android:layout_marginTop="5dp"
+                android:hint="Enter your email"
+                android:inputType="text"
+                android:singleLine="true"></EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/password"
+                android:textSize="15sp"></TextView>
+
+            <EditText
+                android:id="@+id/registerPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Enter your password"
+                android:inputType="textPassword"
                 android:singleLine="true"></EditText>
         </LinearLayout>
 
@@ -78,33 +86,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="60dp"
+            android:layout_margin="20dp"
             android:gravity="center"
             android:text="@string/sign_up"
-            android:textSize="20sp">
-        </Button>
+            android:textSize="20sp"></Button>
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_gravity="center"
+            android:layout_margin="20dp"
             android:layout_marginTop="50dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Already have an account?"
-                android:textSize="16sp"
                 android:layout_gravity="center"
-                android:gravity="center" ></TextView>
+                android:gravity="center"
+                android:text="Already have an account?"
+                android:textSize="16sp" />
+
             <Button
                 android:id="@+id/signinButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="sign in"
-                android:textSize="16sp"
-                android:layout_marginLeft="5dp"></Button>
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="Sign In"
+                android:textAlignment="center"
+                android:textSize="20sp" />
         </LinearLayout>
+
     </LinearLayout>
 </ScrollView>
