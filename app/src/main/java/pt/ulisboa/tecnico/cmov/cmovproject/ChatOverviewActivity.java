@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import io.socket.client.Socket;
 
 public class ChatOverviewActivity extends AppCompatActivity {
 

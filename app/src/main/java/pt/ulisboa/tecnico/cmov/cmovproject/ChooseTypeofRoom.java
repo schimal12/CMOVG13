@@ -20,8 +20,6 @@ public class ChooseTypeofRoom extends AppCompatActivity {
         Button privateRooms = (Button)findViewById(R.id.privateroom);
         Button geofenceRooms = (Button)findViewById(R.id.geofenceRoom);
 
-
-
         Intent fromUsername = getIntent();
         username = fromUsername.getExtras().getString("username");
 
@@ -46,8 +44,9 @@ public class ChooseTypeofRoom extends AppCompatActivity {
         geofenceRooms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent toChatRoom = new Intent(ChooseTypeofRoom.this, ChatRoomPicker.class);
-                toChatRoom.putExtra("username", username);
+                Intent toGeoFenceRoom = new Intent(ChooseTypeofRoom.this, GeoFenceRooms.class);
+                toGeoFenceRoom.putExtra("username", username);
+                startActivity(toGeoFenceRoom);
             }
         });
 

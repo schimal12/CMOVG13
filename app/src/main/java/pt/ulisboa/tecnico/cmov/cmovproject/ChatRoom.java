@@ -1,7 +1,10 @@
 package pt.ulisboa.tecnico.cmov.cmovproject;
 
 import pt.ulisboa.tecnico.cmov.cmovproject.model.Message;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,7 +14,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -22,9 +28,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,9 +50,9 @@ import java.util.List;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-public class ChatRoom extends AppCompatActivity {
+public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
 
-    //private Socket socket;
+    private Socket socket;
     private String username;
     private String roomname;
     public RecyclerView recyclerView;
@@ -46,8 +63,20 @@ public class ChatRoom extends AppCompatActivity {
     public SocketIOApp app;
     public Socket mSocket;
     public TextView RoomName;
+
+    // --------- camera image ---------
     ImageButton camera_open_id;
-    ImageView click_image_id;
+    private ImageView mPhotoImageView;                // to show the photo
+    private String photoURI;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    // --------- google maps ---------
+    ImageButton maps_button;
+    private GoogleMap mMap;
+    Boolean actual_ubi_check,input_ubi_check = false; // from MapsActivity
+    Double Actual_ubi_lat,Actual_ubi_long;            // from MapsActivity
+    Double Input_ubi_lat,Input_ubi_long;              // from MapsActivity
+    SupportMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,31 +92,43 @@ public class ChatRoom extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        RoomName = (TextView)findViewById(R.id.RoomID);
 
         Intent fromUsername = getIntent();
         username = fromUsername.getExtras().getString("username");
         roomname = fromUsername.getExtras().getString("chatroomname");
         RoomName.setText("Room: "+roomname);
 
-        // CAMERA
-        // by ID we can get each component which id is assigned in XML file
-        // get Buttons and ImageView
+        // --------- Camera ---------
         camera_open_id = (ImageButton) findViewById(R.id.camera);
-        //click_image_id = (ImageView) findViewById(R.id.imageView);
-
-        // camera_open is for open the camera and add the setOnCLickListener in this button
         camera_open_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-                {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
-                }
                 Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivity(camera_intent);
             }
         });
+        // to show the photo on the chat
+        mPhotoImageView = findViewById(R.id.imageView);
+
+        // --------- Map Activity ---------
+        maps_button = (ImageButton) findViewById(R.id.map);
+        maps_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent maps_intent = new Intent(ChatRoom.this,MapsActivity.class);
+                maps_intent.putExtra("username",username);
+                startActivity(maps_intent);
+            }
+        });
+
+        // --------- Map Fragment no visible in the beginning ---------
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.ubi);
+        mapFragment.getMapAsync(this);
+        mapFragment.getView().setVisibility(View.GONE);
+
+        receiveDataFromMapsActivity();
 
 
         app = SocketIOApp.getInstance();
@@ -256,10 +297,105 @@ public class ChatRoom extends AppCompatActivity {
             });
         }
     };
+    private void receiveDataFromMapsActivity(){
+        Intent fromData = getIntent();
+        username = fromData.getExtras().getString("username");
+        double actual_ubi_lat = fromData.getExtras().getDouble("actual_ubi_lat");
+        Actual_ubi_lat = actual_ubi_lat;
+        double actual_ubi_long = fromData.getExtras().getDouble("actual_ubi_long");
+        Actual_ubi_long = actual_ubi_long;
+        actual_ubi_check = fromData.getExtras().getBoolean("actual_ubi_check");
+        if (actual_ubi_check == true){
+            mapFragment.getView().setVisibility(View.VISIBLE);
+        }
+        double search_ubi_lat = fromData.getExtras().getDouble("search_ubi_lat");
+        Input_ubi_lat = search_ubi_lat;
+        double search_ubi_long = fromData.getExtras().getDouble("search_ubi_long");
+        Input_ubi_long = search_ubi_long;
+        input_ubi_check = fromData.getExtras().getBoolean("input_ubi_check");
+        if (input_ubi_check == true){
+            mapFragment.getView().setVisibility(View.VISIBLE);
+        }
+        double marker_ubi_lat = fromData.getExtras().getDouble("marker_ubi_lat");
+        double marker_ubi_long = fromData.getExtras().getDouble("marker_ubi_long");
+        Log.e("actual_ubi_lat: ", String.valueOf(actual_ubi_lat));
+        Log.e("actual_ubi_long: ", String.valueOf(actual_ubi_long));
+        Log.e("search_ubi_lat: ", String.valueOf(search_ubi_lat));
+        Log.e("search_ubi_long: ", String.valueOf(search_ubi_long));
+        Log.e("marker_ubi_lat: ", String.valueOf(marker_ubi_lat));
+        Log.e("marker_ubi_long: ", String.valueOf(marker_ubi_long));
+    }
 
-    /*@Override
+    private void openCamera() throws IOException {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File imgFile = null;
+        try{
+            imgFile = createImageFile();
+
+        }catch (IOException ex){
+            Log.e("Error", ex.toString());
+        }
+        if(imgFile != null)
+        {
+            Uri imgUri = FileProvider.getUriForFile(this, "com.example.myapplication.fileprovider", imgFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+        }
+
+        startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
+    }
+
+    // save the image
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
+            Bitmap imgBitMap = BitmapFactory.decodeFile(photoURI);
+            mPhotoImageView.setImageBitmap(imgBitMap);
+        }
+    }
+
+    private File createImageFile() throws  IOException{
+        String name = "foto_";
+        File folder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(name, ".jpg", folder);
+
+        photoURI = image.getAbsolutePath();
+        Log.d("PHOTOURI:",photoURI);
+        return image;
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mSocket.disconnect();
-    }*/
+    }
+
+    // fragment of the map on the chat
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+        LatLng location = new LatLng(0,0);
+        if (actual_ubi_check == true){
+            LatLng actual = new LatLng(Actual_ubi_lat,Actual_ubi_long);
+            location = actual;
+            mMap.addMarker(new MarkerOptions()
+                    .position(actual)
+                    .title("Current location"));
+        }
+        else if (input_ubi_check == true){
+            LatLng input = new LatLng(Input_ubi_lat,Input_ubi_long);
+            location = input;
+            mMap.addMarker(new MarkerOptions()
+                    .position(input)
+                    .title("Search location"));
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(location)
+                .zoom(15)
+                .bearing(90)
+                .tilt(45)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
 }

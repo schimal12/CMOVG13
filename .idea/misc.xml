@@ -3,25 +3,26 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/schimalm/AndroidStudioProjects/CMOVProject/app/src/main/res/layout/activity_chat_overview.xml" value="0.1796875" />
-        <entry key="..\:/Users/schimalm/AndroidStudioProjects/CMOVProject/app/src/main/res/layout/activity_chat_room.xml" value="0.1796875" />
-        <entry key="..\:/Users/schimalm/AndroidStudioProjects/CMOVProject/app/src/main/res/layout/activity_chat_room_picker.xml" value="0.14766970618034447" />
-        <entry key="..\:/Users/schimalm/AndroidStudioProjects/CMOVProject/app/src/main/res/layout/activity_login.xml" value="0.46979166666666666" />
-        <entry key="..\:/Users/schimalm/AndroidStudioProjects/CMOVProject/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
-        <entry key="..\:/Users/schimalm/AndroidStudioProjects/CMOVProject/app/src/main/res/layout/activity_register.xml" value="0.1796875" />
-        <entry key="..\:/Users/schimalm/AndroidStudioProjects/CMOVProject/app/src/main/res/layout/message.xml" value="0.1796875" />
-        <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/drawable/ic_camera.xml" value="0.1" />
-        <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/drawable/ic_map.xml" value="0.1" />
-        <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/drawable/ic_search.xml" value="0.157" />
-        <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/activity_chat_overview.xml" value="0.2109375" />
-        <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/activity_chat_room.xml" value="0.2109375" />
-        <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/activity_chat_room_picker.xml" value="0.2109375" />
-        <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/activity_choose_typeof_room.xml" value="0.2109375" />
-        <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/activity_login.xml" value="0.2109375" />
-        <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/activity_maps.xml" value="0.12907608695652173" />
-        <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/activity_private_chat_room.xml" value="0.4046875" />
-        <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/activity_private_room.xml" value="0.278125" />
-        <entry key="..\:/Users/schimalm/Downloads/CMOV/app/src/main/res/layout/message.xml" value="0.15942028985507245" />
+        <entry key="../../../../../../../../../../layout/custom_preview.xml" value="0.10161870503597123" />
+        <entry key="../../../../layout/custom_preview.xml" value="0.1157074340527578" />
+        <entry key="..\:/Users/schimalm/AndroidStudioProjects/CMOVG13/app/src/main/res/layout/activity_chat_room.xml" value="0.22010869565217392" />
+        <entry key="..\:/Users/schimalm/AndroidStudioProjects/CMOVG13/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
+        <entry key="..\:/Users/schimalm/AndroidStudioProjects/CMOVG13/app/src/main/res/layout/activity_register.xml" value="0.1796875" />
+        <entry key="..\:/Users/schimalm/AndroidStudioProjects/CMOVG13/app/src/main/res/layout/message.xml" value="0.22010869565217392" />
+        <entry key="app/src/main/res/drawable/ic_search.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_chat_list.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_chat_overview.xml" value="0.23503325942350334" />
+        <entry key="app/src/main/res/layout/activity_chat_room.xml" value="0.17142857142857143" />
+        <entry key="app/src/main/res/layout/activity_chat_room_picker.xml" value="0.18009118541033434" />
+        <entry key="app/src/main/res/layout/activity_choose_typeof_room.xml" value="0.17958459979736577" />
+        <entry key="app/src/main/res/layout/activity_geo_fence_rooms.xml" value="0.17958459979736577" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.17958459979736577" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2818610822650749" />
+        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.16" />
+        <entry key="app/src/main/res/layout/activity_private_chat_room.xml" value="0.17958459979736577" />
+        <entry key="app/src/main/res/layout/activity_private_room.xml" value="0.17958459979736577" />
+        <entry key="app/src/main/res/layout/activity_see_the_geofence.xml" value="0.24818840579710144" />
+        <entry key="app/src/main/res/xml/file_paths.xml" value="0.14402173913043478" />
       </map>
     </option>
   </component>

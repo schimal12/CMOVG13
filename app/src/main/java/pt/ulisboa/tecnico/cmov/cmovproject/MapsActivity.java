@@ -63,11 +63,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         marker_ubi = findViewById(R.id.marker_ubi);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-        //        .findFragmentById(R.id.map);
-        //mapFragment.getMapAsync(this);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
-        getLocalizacion();
+        getLocalization();
 
         imageViewSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,8 +104,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Intent fromUsername = getIntent();
                 username = fromUsername.getExtras().getString("username");
-                Intent chat_intent = new Intent(MapsActivity.this,ChatRoom.class);
                 // send to ChatRoom
+                Intent chat_intent = new Intent(MapsActivity.this,ChatRoom.class);
                 chat_intent.putExtra("username",username);
                 chat_intent.putExtra("actual_ubi_lat", actual_ubi_lat);
                 chat_intent.putExtra("actual_ubi_long", actual_ubi_long);
@@ -147,9 +147,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private void getLocalizacion() {
-        int permiso = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (permiso == PackageManager.PERMISSION_DENIED){
+    private void getLocalization() {
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (permission == PackageManager.PERMISSION_DENIED){
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION)){
 
             }else{
@@ -219,7 +219,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapLongClick(@NonNull LatLng latLng) {
-
 
     }
 }
