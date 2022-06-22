@@ -1,65 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/inputLocation"
-            android:layout_width="374dp"
-            android:layout_height="wrap_content"
-            tools:ignore="Suspicious0dp"></EditText>
-
-        <ImageView
-            android:id="@+id/imageViewSearch"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:src="@drawable/ic_search"
-            tools:ignore="MissingConstraints"></ImageView>
-    </LinearLayout>
-
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="10dp"
-        tools:context=".MapsActivity" />
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:orientation="vertical"
-        tools:ignore="MissingConstraints">
+        android:layout_margin="20dp">
 
-        <Button
-            android:id="@+id/actual_ubi"
-            android:layout_width="match_parent"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Send actual ubication"
-            tools:ignore="MissingConstraints" />
+            android:orientation="horizontal"
+            >
 
-        <Button
-            android:id="@+id/specific_ubi"
+            <EditText
+                android:id="@+id/inputLocation"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_weight="1"
+                android:text="search location"
+                tools:ignore="Suspicious0dp"></EditText>
+
+            <ImageView
+                android:id="@+id/imageViewSearch"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_search"
+                tools:ignore="MissingConstraints"
+
+                ></ImageView>
+
+        </LinearLayout>
+
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Send the input location"
-            tools:ignore="MissingConstraints" />
+            android:layout_height="400dp"
+            android:layout_marginTop="10dp"
+            tools:context=".MapsActivity" />
 
-        <Button
-            android:id="@+id/marker_ubi"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Send the marker location"
-            tools:ignore="MissingConstraints" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints">
 
+            <Button
+                android:id="@+id/actual_ubi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Send actual ubication"
+                tools:ignore="MissingConstraints"
+                />
+
+            <Button
+                android:id="@+id/specific_ubi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Send the input location"
+                tools:ignore="MissingConstraints"
+                android:layout_marginTop="20dp"/>
+
+            <Button
+                android:id="@+id/marker_ubi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Send the marker location"
+                tools:ignore="MissingConstraints"
+                android:layout_marginTop="20dp"/>
+
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

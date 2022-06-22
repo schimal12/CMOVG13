@@ -24,13 +24,6 @@ public class seeTheGeoFence extends AppCompatActivity{
 
         setContentView(R.layout.activity_see_the_geofence);
 
-        geofenceList.add(new Geofence.Builder()
-                .setRequestId("my geofence")
-                .setCircularRegion(latitude,longitude,radio)
-                .setExpirationDuration(6*60)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                        Geofence.GEOFENCE_TRANSITION_EXIT)
-                .build());
     }
 
     private GeofencingRequest getGeofencingRequest() {

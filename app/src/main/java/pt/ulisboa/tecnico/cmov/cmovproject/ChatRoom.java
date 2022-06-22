@@ -73,9 +73,10 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
     // --------- google maps ---------
     ImageButton maps_button;
     private GoogleMap mMap;
-    Boolean actual_ubi_check,input_ubi_check = false; // from MapsActivity
+    Boolean actual_ubi_check=false,input_ubi_check=false,marker_ubi_check = false; // from MapsActivity
     Double Actual_ubi_lat,Actual_ubi_long;            // from MapsActivity
     Double Input_ubi_lat,Input_ubi_long;              // from MapsActivity
+    Double Marker_ubi_lat, Marker_ubi_long;           // from MapsActivity
     SupportMapFragment mapFragment;
 
     @Override
@@ -317,7 +318,13 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
             mapFragment.getView().setVisibility(View.VISIBLE);
         }
         double marker_ubi_lat = fromData.getExtras().getDouble("marker_ubi_lat");
+        Marker_ubi_lat = marker_ubi_lat;
         double marker_ubi_long = fromData.getExtras().getDouble("marker_ubi_long");
+        Marker_ubi_long = marker_ubi_long;
+        marker_ubi_check = fromData.getExtras().getBoolean("marker_ubi_check");
+        if (marker_ubi_check == true){
+            mapFragment.getView().setVisibility(View.VISIBLE);
+        }
         Log.e("actual_ubi_lat: ", String.valueOf(actual_ubi_lat));
         Log.e("actual_ubi_long: ", String.valueOf(actual_ubi_long));
         Log.e("search_ubi_lat: ", String.valueOf(search_ubi_lat));
@@ -388,6 +395,13 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
             mMap.addMarker(new MarkerOptions()
                     .position(input)
                     .title("Search location"));
+        }
+        else if (marker_ubi_check == true){
+            LatLng marker = new LatLng(Marker_ubi_lat,Marker_ubi_long);
+            location = marker;
+            mMap.addMarker(new MarkerOptions()
+                    .position(marker)
+                    .title("Marker location"));
         }
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         CameraPosition cameraPosition = new CameraPosition.Builder()

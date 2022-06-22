@@ -37,6 +37,11 @@
         <activity
             android:name=".GeoFenceRooms"
             android:exported="false" />
+
+        <activity
+            android:name=".seeTheGeoFence"
+            android:exported="false" />
+
         <activity
             android:name=".PrivateRoom"
             android:exported="false" />
@@ -94,6 +99,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LoginActivity" />
         </activity>
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
     </application>
+
 
 </manifest>
