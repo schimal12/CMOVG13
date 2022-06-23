@@ -84,7 +84,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Intent toRegisterActivity = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(toRegisterActivity);
                 break;
-
+            case R.id.signInBtn:
+                EditText username1 = (EditText) findViewById(R.id.signinUsername);
+                if(username1.getText().toString().isEmpty()){
+                    Context context = getApplicationContext();
+                    CharSequence text = "You need to enter a username and password";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toastUserName = Toast.makeText(context, text, duration);
+                    toastUserName.show();
+                }else{
+                    Intent toChatRoom = new Intent(LoginActivity.this, ChooseTypeofRoom.class);
+                    toChatRoom.putExtra("username", username1.getText().toString());
+                    startActivity(toChatRoom);
+                }
+                break;
         }
     }
 

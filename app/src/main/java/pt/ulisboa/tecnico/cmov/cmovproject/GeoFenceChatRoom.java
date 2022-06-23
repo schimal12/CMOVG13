@@ -1,24 +1,11 @@
 package pt.ulisboa.tecnico.cmov.cmovproject;
 
-import pt.ulisboa.tecnico.cmov.cmovproject.model.Message;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -30,13 +17,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,29 +35,30 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import io.socket.client.Socket;
+
 import io.socket.emitter.Emitter;
+import io.socket.client.Socket;
+import pt.ulisboa.tecnico.cmov.cmovproject.model.Message;
 
-public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
+public class GeoFenceChatRoom extends AppCompatActivity implements OnMapReadyCallback {
 
-    //private Socket socket;
+    private Socket mSocket;
     private String username;
-    private String roomname;
     public RecyclerView recyclerView;
     public List<Message> ListaMensajes;
     public RecycleViewAdapater recycleViewAdapater;
     public EditText message;
     public Button sendMessage;
-    public SocketIOApp app;
-    public Socket mSocket;
-    static SharedPreferences.Editor configEditor;
-    SharedPreferences prefs;
+
     public TextView RoomName;
+    private String roomname;
+
+    public SocketIOApp app;
+
 
     // --------- camera image ---------
     ImageButton camera_open_id;
@@ -77,13 +69,18 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
     // --------- google maps ---------
     ImageButton maps_button;
     private GoogleMap mMap;
-    Boolean actual_ubi_check=false,input_ubi_check=false,marker_ubi_check = false; // from MapsActivity
+    Boolean actual_ubi_check,input_ubi_check = false; // from MapsActivity
     Double Actual_ubi_lat,Actual_ubi_long;            // from MapsActivity
     Double Input_ubi_lat,Input_ubi_long;              // from MapsActivity
-    Double Marker_ubi_lat, Marker_ubi_long;           // from MapsActivity
     SupportMapFragment mapFragment;
 
+    // --------- From GeoFerenceRooms ---------
+    private double receive_longitude;
+    private double receive_latitude;
+    private String receive_radio;
 
+    // --------- GeoFence ---------
+    private GeofencingClient geofencingClient;
 
 
     @Override
@@ -91,33 +88,6 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
 
-
-
-        //Notifying that the application was created.
-
-        Context ctx = getApplicationContext();
-        prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-
-        configEditor = prefs.edit();
-        configEditor.putBoolean("activityStarted",true);
-        configEditor.commit();
-
-        //Obtaining information about the service
-        Boolean status = prefs.getBoolean("serviceStopped",false);
-        Log.d("Notification","Status: "+status);
-        if(status){
-
-            Log.d("service","not running");
-            Log.d("activity running",prefs.getBoolean("activityStarted",false)+"");
-
-        }
-        else{
-            Log.d("service running","true");
-            Log.d("activity running", prefs.getBoolean("activityStarted", false) + "");
-            stopService(new Intent(getBaseContext(), NotificationService.class));
-        }
-
-        RoomName = (TextView)findViewById(R.id.RoomID);
         message = (EditText) findViewById(R.id.message);
         sendMessage = (Button) findViewById(R.id.sendMessage);
         ListaMensajes = new ArrayList<>();
@@ -126,6 +96,7 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        RoomName = (TextView)findViewById(R.id.RoomID);
 
         Intent fromUsername = getIntent();
         username = fromUsername.getExtras().getString("username");
@@ -141,9 +112,6 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
                 startActivity(camera_intent);
             }
         });
-
-        //This part needs to be integrated with the messages.
-
         // to show the photo on the chat
         mPhotoImageView = findViewById(R.id.imageView);
 
@@ -152,7 +120,7 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
         maps_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent maps_intent = new Intent(ChatRoom.this,MapsActivity.class);
+                Intent maps_intent = new Intent(GeoFenceChatRoom.this,MapsActivity.class);
                 maps_intent.putExtra("username",username);
                 startActivity(maps_intent);
             }
@@ -163,9 +131,6 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
                 .findFragmentById(R.id.ubi);
         mapFragment.getMapAsync(this);
         mapFragment.getView().setVisibility(View.GONE);
-
-        receiveDataFromMapsActivity();
-        //
 
         app = SocketIOApp.getInstance();
         mSocket = app.getSocket();
@@ -178,21 +143,33 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
         mSocket.on("userDisconnected", ListerUserDisconnected);
         mSocket.on("updatingMessages", ListenUpdateMessage);
 
-        //Modification of emit to join to a specific Room.
-        mSocket.emit("join", username, roomname);
-
-        //Fill the group with previous messages.so
-        mSocket.emit("verifyOldMessages", roomname);
-
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSocket.emit("messageemit", username, message.getText().toString(), roomname);
-                message.setText(" ");
+                if (message.getText().toString().isEmpty()) {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Write something, :)";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toastUserName = Toast.makeText(context, text, duration);
+                    toastUserName.show();
+                } else {
+                    mSocket.emit("messagedetection", username, message.getText());
+                    message.setText("");
+                }
             }
         });
+        camera_open_id.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    openCamera();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        receiveDataFromGeoFence();
     }
-
 
     //Listeners
 
@@ -226,7 +203,7 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
 
     public Emitter.Listener ListenConnection = new Emitter.Listener(){
 
-     @Override
+        @Override
         public void call(Object... args) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -235,7 +212,7 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
                     try{
                         String uNickname = data.getString("message");
                         String message = "The user "+uNickname+" has connected";
-                        Toast.makeText(ChatRoom.this, message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GeoFenceChatRoom.this, message, Toast.LENGTH_SHORT).show();
                     }catch (JSONException e){
                         e.printStackTrace();
                     }
@@ -281,7 +258,7 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
                 @Override
                 public void run() {
                     String data = (String)args[0];
-                    Toast.makeText(ChatRoom.this, data, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GeoFenceChatRoom.this, data, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -294,14 +271,14 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
                 @Override
                 public void run() {
                     String data = (String)args[0];
-                    Toast.makeText(ChatRoom.this, data, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GeoFenceChatRoom.this, data, Toast.LENGTH_SHORT).show();
                 }
             });
         }
     };
 
     public Emitter.Listener onConnect = new Emitter.Listener() {
-        @Override   
+        @Override
         public void call(Object... args) {
             Log.d("Socket", "Socket Connected!");
         }
@@ -333,42 +310,21 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
             });
         }
     };
-    private void receiveDataFromMapsActivity(){
+
+
+    private void receiveDataFromGeoFence(){
         Intent fromData = getIntent();
         username = fromData.getExtras().getString("username");
-        double actual_ubi_lat = fromData.getExtras().getDouble("actual_ubi_lat");
-        Actual_ubi_lat = actual_ubi_lat;
-        double actual_ubi_long = fromData.getExtras().getDouble("actual_ubi_long");
-        Actual_ubi_long = actual_ubi_long;
-        actual_ubi_check = fromData.getExtras().getBoolean("actual_ubi_check");
-        if (actual_ubi_check == true){
-            mapFragment.getView().setVisibility(View.VISIBLE);
-        }
-        double search_ubi_lat = fromData.getExtras().getDouble("search_ubi_lat");
-        Input_ubi_lat = search_ubi_lat;
-        double search_ubi_long = fromData.getExtras().getDouble("search_ubi_long");
-        Input_ubi_long = search_ubi_long;
-        input_ubi_check = fromData.getExtras().getBoolean("input_ubi_check");
-        if (input_ubi_check == true){
-            mapFragment.getView().setVisibility(View.VISIBLE);
-        }
-        double marker_ubi_lat = fromData.getExtras().getDouble("marker_ubi_lat");
-        Marker_ubi_lat = marker_ubi_lat;
-        double marker_ubi_long = fromData.getExtras().getDouble("marker_ubi_long");
-        Marker_ubi_long = marker_ubi_long;
-        marker_ubi_check = fromData.getExtras().getBoolean("marker_ubi_check");
-        if (marker_ubi_check == true){
-            mapFragment.getView().setVisibility(View.VISIBLE);
-        }
-        Log.e("actual_ubi_lat: ", String.valueOf(actual_ubi_lat));
-        Log.e("actual_ubi_long: ", String.valueOf(actual_ubi_long));
-        Log.e("search_ubi_lat: ", String.valueOf(search_ubi_lat));
-        Log.e("search_ubi_long: ", String.valueOf(search_ubi_long));
-        Log.e("marker_ubi_lat: ", String.valueOf(marker_ubi_lat));
-        Log.e("marker_ubi_long: ", String.valueOf(marker_ubi_long));
+        receive_latitude = fromData.getDoubleExtra("send_latitude",0);
+        receive_longitude = fromData.getDoubleExtra("send_longitude",0);
+        receive_radio = fromData.getExtras().getString("send_radio");
+        Log.d("username",username);
+        Log.d("RADIO",receive_radio);
+        Log.d("longitude", String.valueOf(receive_longitude));
+        Log.d("latitude", String.valueOf(receive_latitude));
     }
 
-    private void openCamera() throws IOException {
+    private void openCamera() throws  IOException{
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File imgFile = null;
         try{
@@ -396,15 +352,6 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
         }
     }
 
-    @Override
-    protected void onPause(){
-        super.onPause();
-        Log.d("activity","Closing App");
-        configEditor = prefs.edit();
-        configEditor.putBoolean("activityStarted", false);
-        configEditor.commit();
-        startService(new Intent(getBaseContext(), NotificationService.class));
-    }
     private File createImageFile() throws  IOException{
         String name = "foto_";
         File folder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -425,35 +372,6 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng location = new LatLng(0,0);
-        if (actual_ubi_check == true){
-            LatLng actual = new LatLng(Actual_ubi_lat,Actual_ubi_long);
-            location = actual;
-            mMap.addMarker(new MarkerOptions()
-                    .position(actual)
-                    .title("Current location"));
-        }
-        else if (input_ubi_check == true){
-            LatLng input = new LatLng(Input_ubi_lat,Input_ubi_long);
-            location = input;
-            mMap.addMarker(new MarkerOptions()
-                    .position(input)
-                    .title("Search location"));
-        }
-        else if (marker_ubi_check == true){
-            LatLng marker = new LatLng(Marker_ubi_lat,Marker_ubi_long);
-            location = marker;
-            mMap.addMarker(new MarkerOptions()
-                    .position(marker)
-                    .title("Marker location"));
-        }
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(location)
-                .zoom(15)
-                .bearing(90)
-                .tilt(45)
-                .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
+
 }

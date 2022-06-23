@@ -41,7 +41,9 @@
             android:name=".GeoFenceRooms"
             android:exported="false" />
 
-
+        <activity
+            android:name=".seeTheGeoFence"
+            android:exported="false" />
         <activity
             android:name=".ChooseTypeofRoom"
             android:exported="false" />
@@ -67,10 +69,7 @@
 
         <activity
             android:name=".ChatRoomPicker"
-            android:exported="true">
-
-        </activity>
-
+            android:exported="false" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
@@ -122,5 +121,6 @@
         <service
             android:name=".NotificationService"
             android:enabled="true"/>
-     </application>
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+    </application>
 </manifest>

@@ -100,7 +100,6 @@ public class PrivateChatRoom extends AppCompatActivity {
         // by ID we can get each component which id is assigned in XML file
         // get Buttons and ImageView
         camera_open_id = (ImageButton) findViewById(R.id.camera);
-        //click_image_id = (ImageView) findViewById(R.id.imageView);
 
         // camera_open is for open the camera and add the setOnCLickListener in this button
         camera_open_id.setOnClickListener(new View.OnClickListener() {

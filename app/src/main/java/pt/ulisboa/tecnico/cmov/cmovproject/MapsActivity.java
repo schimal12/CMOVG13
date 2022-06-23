@@ -49,7 +49,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // for ChatRoom
     double actual_ubi_lat, actual_ubi_long;
     double search_ubi_lat, search_ubi_long;
-    Boolean actual_ubi_check,input_ubi_check=false;
+    double marker_ubi_lat, marker_ubi_long;
+    Boolean actual_ubi_check=false,input_ubi_check=false,marker_ubi_check=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +64,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         marker_ubi = findViewById(R.id.marker_ubi);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-        //        .findFragmentById(R.id.map);
-        //mapFragment.getMapAsync(this);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
-        getLocalizacion();
+        getLocalization();
 
         imageViewSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,8 +105,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Intent fromUsername = getIntent();
                 username = fromUsername.getExtras().getString("username");
-                Intent chat_intent = new Intent(MapsActivity.this,ChatRoom.class);
                 // send to ChatRoom
+                Intent chat_intent = new Intent(MapsActivity.this,ChatRoom.class);
                 chat_intent.putExtra("username",username);
                 chat_intent.putExtra("actual_ubi_lat", actual_ubi_lat);
                 chat_intent.putExtra("actual_ubi_long", actual_ubi_long);
@@ -139,17 +140,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent chat_intent3 = new Intent(MapsActivity.this,ChatRoom.class);
                 // send to ChatRoom
                 chat_intent3.putExtra("username",username);
-                chat_intent3.putExtra("marker_ubi_lat", search_ubi_lat);
-                chat_intent3.putExtra("marker_ubi_long", search_ubi_long);
+                chat_intent3.putExtra("marker_ubi_lat", marker_ubi_lat);
+                chat_intent3.putExtra("marker_ubi_long", marker_ubi_long);
+                marker_ubi_check = true;
+                chat_intent3.putExtra("marker_ubi_check",marker_ubi_check);
                 startActivity(chat_intent3);
             }
         });
 
     }
 
-    private void getLocalizacion() {
-        int permiso = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (permiso == PackageManager.PERMISSION_DENIED){
+    private void getLocalization() {
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (permission == PackageManager.PERMISSION_DENIED){
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION)){
 
             }else{
@@ -178,6 +181,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
+        mMap.setOnMapLongClickListener(this);
 
         LocationManager locationManager = (LocationManager) MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
@@ -219,7 +223,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapLongClick(@NonNull LatLng latLng) {
-
-
+        mMap.addMarker(new MarkerOptions().position(latLng));
+        marker_ubi_lat = latLng.latitude;
+        marker_ubi_long = latLng.longitude;
     }
 }
