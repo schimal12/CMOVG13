@@ -29,7 +29,7 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.11" />
         <entry key="app/src/main/res/drawable/ic_map.xml" value="0.11" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.11" />
-        <entry key="app/src/main/res/layout/activity_chat_overview.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_chat_overview.xml" value="0.14867553710937498" />
         <entry key="app/src/main/res/layout/activity_chat_room.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_chat_room_picker.xml" value="0.16296296296296298" />
         <entry key="app/src/main/res/layout/activity_choose_typeof_room.xml" value="0.16296296296296298" />
