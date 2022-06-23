@@ -16,7 +16,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20sp"
             android:includeFontPadding="false"
-            android:text="Chat Room"
+            android:text="@string/chat_room"
             android:textSize="32sp"/>
 
         <TextView
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:includeFontPadding="false"
-            android:text="Create or Join to a Room"
+            android:text="@string/create_or_join_to_a_room"
             android:textSize="14sp"/>
 
         <Button
@@ -34,7 +34,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="60dp"
             android:gravity="center"
-            android:text="Public Room"
+            android:text="@string/public_room"
             android:textAlignment="center"
             android:textSize="20sp"
             />
@@ -46,7 +46,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="60dp"
             android:gravity="center"
-            android:text="Private Room"
+            android:text="@string/private_room"
             android:textAlignment="center"
             android:textSize="20sp"/>
 
@@ -57,7 +57,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="60dp"
             android:gravity="center"
-            android:text="Geo Fence Room"
+            android:text="@string/geo_fence_room"
             android:textAlignment="center"
             android:textSize="20sp"/>
 

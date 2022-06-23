@@ -33,13 +33,12 @@
                 android:layout_height="38dp"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="bottom"
-                android:src="@drawable/ic_search"
+            android:src="@drawable/ic_search"
                 tools:ignore="MissingConstraints"
 
                 ></ImageView>
 
-        </LinearLayout>
-
+    </LinearLayout>
 
         <fragment
             android:id="@+id/map"
@@ -60,25 +59,24 @@
                 android:id="@+id/actual_ubi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Send actual ubication"
-                tools:ignore="MissingConstraints"
-              />
+            android:text="@string/send_current_location"
+            tools:ignore="MissingConstraints" />
 
-            <Button
-                android:id="@+id/specific_ubi"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Send the input location"
-                tools:ignore="MissingConstraints"
-                android:layout_marginTop="20dp"/>
+        <Button
+            android:id="@+id/specific_ubi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/send_input_location"
+            tools:ignore="MissingConstraints"
+            android:layout_marginTop="20dp"/>
 
             <Button
                 android:id="@+id/marker_ubi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Send the marker location"
-                tools:ignore="MissingConstraints"
-                android:layout_marginTop="20dp"/>
+            android:text="@string/send_pinned_location"
+            tools:ignore="MissingConstraints"
+            android:layout_marginTop="20dp"/>
 
         </LinearLayout>
     </LinearLayout>

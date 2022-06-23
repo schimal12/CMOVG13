@@ -15,7 +15,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20sp"
             android:includeFontPadding="false"
-            android:text="Signup"
+            android:text="@string/sign_up"
             android:textSize="32sp"></TextView>
 
         <TextView
@@ -23,15 +23,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:includeFontPadding="false"
-            android:text="Create your account"
+            android:text="@string/create_your_account"
             android:textSize="14sp"></TextView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:orientation="vertical">
-
+            android:orientation="vertical"
+            android:layout_margin="20dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,23 +43,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:hint="Enter your username"
+                android:hint="@string/enter_your_username"
                 android:inputType="text"
                 android:singleLine="true"></EditText>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:text="@string/email"
+                android:layout_marginTop="15dp"
                 android:textSize="15sp"></TextView>
-
             <EditText
                 android:id="@+id/registerEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:hint="Enter your email"
+                android:hint="@string/enter_your_email"
                 android:inputType="text"
                 android:singleLine="true"></EditText>
 
@@ -76,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:hint="Enter your password"
+                android:hint="@string/enter_your_password"
                 android:inputType="textPassword"
                 android:singleLine="true"></EditText>
         </LinearLayout>
@@ -86,11 +83,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="20dp"
+            android:layout_marginTop="60dp"
             android:gravity="center"
             android:text="@string/sign_up"
-            android:textSize="20sp"></Button>
-
+            android:textSize="20sp">
+        </Button>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,6 +104,11 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="Already have an account?"
+                android:textSize="16sp"></TextView>
+
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Already have an account?"
                 android:textSize="16sp" />
 
             <Button
@@ -120,6 +122,5 @@
                 android:textAlignment="center"
                 android:textSize="20sp" />
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

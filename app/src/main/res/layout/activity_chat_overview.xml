@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/searchBar"
-            android:hint="Search groups"/>
+            android:hint="@string/search_groups"/>
         <ListView
             android:id="@+id/chats_list_view"
             android:layout_width="match_parent"
