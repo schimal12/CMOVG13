@@ -33,13 +33,15 @@
         tools:targetApi="31">
         <activity
             android:name=".PrivateChatRoom"
-            android:exported="false" />
+            android:exported="true"
+            android:launchMode="singleTask">
+
+        </activity>
         <activity
             android:name=".GeoFenceRooms"
             android:exported="false" />
-        <activity
-            android:name=".PrivateRoom"
-            android:exported="false" />
+
+
         <activity
             android:name=".ChooseTypeofRoom"
             android:exported="false" />
@@ -65,19 +67,23 @@
 
         <activity
             android:name=".ChatRoomPicker"
-            android:exported="false" />
+            android:exported="true">
+
+        </activity>
+
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ChatRoom"
             android:exported="false"
@@ -94,6 +100,27 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LoginActivity" />
         </activity>
-    </application>
+        <activity
+            android:name=".PrivateRoom"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
+                <data
+                    android:scheme="https"
+                    android:host="cmovg13.page.link"
+                    android:pathPrefix="/room" />
+                <data
+                    android:scheme="http"
+                    android:host="cmovg13.page.link"
+                    android:pathPrefix="/room" />
+            </intent-filter>
+        </activity>
+        <service
+            android:name=".NotificationService"
+            android:enabled="true"/>
+     </application>
 </manifest>

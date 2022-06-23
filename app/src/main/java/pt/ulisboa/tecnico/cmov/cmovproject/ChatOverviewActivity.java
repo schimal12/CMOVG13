@@ -3,8 +3,11 @@ package pt.ulisboa.tecnico.cmov.cmovproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,13 +39,37 @@ public class ChatOverviewActivity extends AppCompatActivity {
     public List<String> RoomArrayList;
     public String username;
     ArrayAdapter<String> chatsArrayAdapter;
-
+    static SharedPreferences.Editor configEditor;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_overview);
+
+        //Notifying that the application was created.
+
+        Context ctx = getApplicationContext();
+        prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
+        configEditor = prefs.edit();
+        configEditor.putBoolean("activityStarted",true);
+        configEditor.commit();
+
+        //Obtaining information about the service
+        Boolean status = prefs.getBoolean("serviceStopped",false);
+        if(status){
+
+            Log.d("service","not running");
+            Log.d("activity running",prefs.getBoolean("activityStarted",false)+"");
+
+        }
+        else{
+            Log.d("service running","true");
+            Log.d("activity running", prefs.getBoolean("activityStarted", false) + "");
+            stopService(new Intent(getBaseContext(), NotificationService.class));
+        }
 
         chatsListView = findViewById(R.id.chats_list_view);
         searchBar = findViewById(R.id.searchBar);
@@ -150,8 +177,14 @@ public Emitter.Listener ListenerRooms = new Emitter.Listener(){
     };
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy(){
         super.onDestroy();
+        Log.d("activity","Closing App");
+
+        configEditor = prefs.edit();
+        configEditor.putBoolean("activityStarted", false);
+        configEditor.commit();
+        startService(new Intent(getBaseContext(), NotificationService.class));
         mSocket.disconnect();
     }
 }

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "67613884593",
+    "project_id": "cmv13-177d6",
+    "storage_bucket": "cmv13-177d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67613884593:android:3fcd8b4f1e80aef670e290",
+        "android_client_info": {
+          "package_name": "pt.ulisboa.tecnico.cmov.cmovproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "67613884593-v7cruaba19hi3mo2n89uugi3qiemtiue.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pt.ulisboa.tecnico.cmov.cmovproject",
+            "certificate_hash": "2744eaf0a9d969ac79712eec0e9d9951eed0d80e"
+          }
+        },
+        {
+          "client_id": "67613884593-iqkgrc9gd5l0detqdjk0e7uq3q68k9t4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGKOUOU1ScV46lcKwYKWguzHaWTWMOHBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67613884593-iqkgrc9gd5l0detqdjk0e7uq3q68k9t4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

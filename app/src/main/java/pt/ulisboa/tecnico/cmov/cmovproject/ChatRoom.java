@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -45,14 +47,45 @@ public class ChatRoom extends AppCompatActivity {
     public Button sendMessage;
     public SocketIOApp app;
     public Socket mSocket;
+    static SharedPreferences.Editor configEditor;
+    SharedPreferences prefs;
     public TextView RoomName;
     ImageButton camera_open_id;
     ImageView click_image_id;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
+
+
+
+        //Notifying that the application was created.
+
+        Context ctx = getApplicationContext();
+        prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
+        configEditor = prefs.edit();
+        configEditor.putBoolean("activityStarted",true);
+        configEditor.commit();
+
+        //Obtaining information about the service
+        Boolean status = prefs.getBoolean("serviceStopped",false);
+        Log.d("Notification","Status: "+status);
+        if(status){
+
+            Log.d("service","not running");
+            Log.d("activity running",prefs.getBoolean("activityStarted",false)+"");
+
+        }
+        else{
+            Log.d("service running","true");
+            Log.d("activity running", prefs.getBoolean("activityStarted", false) + "");
+            stopService(new Intent(getBaseContext(), NotificationService.class));
+        }
 
         RoomName = (TextView)findViewById(R.id.RoomID);
         message = (EditText) findViewById(R.id.message);
@@ -257,9 +290,13 @@ public class ChatRoom extends AppCompatActivity {
         }
     };
 
-    /*@Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mSocket.disconnect();
-    }*/
+    @Override
+    protected void onPause(){
+        super.onPause();
+        Log.d("activity","Closing App");
+        configEditor = prefs.edit();
+        configEditor.putBoolean("activityStarted", false);
+        configEditor.commit();
+        startService(new Intent(getBaseContext(), NotificationService.class));
+    }
 }
