@@ -177,8 +177,8 @@ public Emitter.Listener ListenerRooms = new Emitter.Listener(){
     };
 
     @Override
-    protected void onDestroy(){
-        super.onDestroy();
+    protected void onPause(){
+        super.onPause();
         Log.d("activity","Closing App");
 
         configEditor = prefs.edit();
