@@ -1,19 +1,28 @@
 package pt.ulisboa.tecnico.cmov.cmovproject;
 
 import pt.ulisboa.tecnico.cmov.cmovproject.model.Message;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -24,9 +33,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,7 +56,6 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class PrivateChatRoom extends AppCompatActivity {
-
     //private Socket socket;
     private String username;
     private String roomname;
@@ -47,16 +66,30 @@ public class PrivateChatRoom extends AppCompatActivity {
     public Button sendMessage;
     public SocketIOApp app;
     public Socket mSocket;
-    public TextView RoomName;
-    ImageButton camera_open_id;
-    ImageView click_image_id;
     static SharedPreferences.Editor configEditor;
     SharedPreferences prefs;
+    public TextView RoomName;
+    public Button shareRoom;
+
+    // --------- camera image ---------
+    ImageButton camera_open_id;
+    private ImageView mPhotoImageView;                // to show the photo
+    private String photoURI;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    // --------- google maps ---------
+    ImageButton maps_button;
+    private GoogleMap mMap;
+    Boolean actual_ubi_check=false,input_ubi_check=false,marker_ubi_check = false; // from MapsActivity
+    Double Actual_ubi_lat,Actual_ubi_long;            // from MapsActivity
+    Double Input_ubi_lat,Input_ubi_long;              // from MapsActivity
+    Double Marker_ubi_lat, Marker_ubi_long;           // from MapsActivity
+    SupportMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_private_chat_room);
+        setContentView(R.layout.activity_chat_room);
 
         //Notifying that the application was created.
 
@@ -69,6 +102,7 @@ public class PrivateChatRoom extends AppCompatActivity {
 
         //Obtaining information about the service
         Boolean status = prefs.getBoolean("serviceStopped",false);
+        Log.d("Notification","Status: "+status);
         if(status){
 
             Log.d("service","not running");
@@ -89,32 +123,56 @@ public class PrivateChatRoom extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        shareRoom = (Button)findViewById(R.id.sharePrivateRoom);
 
+        //Getting information from Shared Preferences.
 
-        Intent fromUsername = getIntent();
-        username = fromUsername.getExtras().getString("username");
-        roomname = fromUsername.getExtras().getString("chatroomname");
+        username = prefs.getString("username","Anonymous");
+        roomname = prefs.getString("chatroomname","Anonymous");
+
         RoomName.setText("Room: "+roomname);
 
-        // CAMERA
-        // by ID we can get each component which id is assigned in XML file
-        // get Buttons and ImageView
+        // --------- Camera ---------
         camera_open_id = (ImageButton) findViewById(R.id.camera);
-
-        // camera_open is for open the camera and add the setOnCLickListener in this button
         camera_open_id.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-                {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
-                }
                 Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivity(camera_intent);
             }
         });
 
+        //This part needs to be integrated with the messages.
+
+        // to show the photo on the chat
+        mPhotoImageView = findViewById(R.id.imageView);
+
+        // --------- Map Activity ---------
+        maps_button = (ImageButton) findViewById(R.id.map);
+        maps_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent maps_intent = new Intent(PrivateChatRoom.this,MapsActivity.class);
+                maps_intent.putExtra("username",username);
+                startActivityForResult(maps_intent, 1);
+            }
+        });
+
+        shareRoom.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                String URL = "cmovg13.page.link/room/"+roomname;
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("privateRoomLink", URL);
+                clipboard.setPrimaryClip(clip);
+            }
+        });
+
+        // --------- Map Fragment no visible in the beginning ---------
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.ubi);
+        mapFragment.getView().setVisibility(View.GONE);
 
         app = SocketIOApp.getInstance();
         mSocket = app.getSocket();
@@ -126,6 +184,7 @@ public class PrivateChatRoom extends AppCompatActivity {
         mSocket.on("userjoinedroom", ListenUserRoom);
         mSocket.on("userDisconnected", ListerUserDisconnected);
         mSocket.on("updatingMessages", ListenUpdateMessage);
+        mSocket.on("messageMap", ListenUpdateMap);
 
         //Modification of emit to join to a specific Room.
         mSocket.emit("join", username, roomname);
@@ -136,11 +195,13 @@ public class PrivateChatRoom extends AppCompatActivity {
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSocket.emit("messageemit", username, message.getText().toString(), roomname);
+
+                mSocket.emit("messageemit", username, message.getText().toString(), roomname,"text");
                 message.setText(" ");
             }
         });
     }
+
 
     //Listeners
 
@@ -192,6 +253,34 @@ public class PrivateChatRoom extends AppCompatActivity {
         }
     };
 
+    public Emitter.Listener ListenUpdateMap = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject)args[0];
+                    try {
+                        String uNickname = data.getString("uNickname");
+                        String messageText = data.getString("message");
+                        String [] values = (messageText.split("-"));
+                        String lat = values[0];
+                        String longM = values[1];
+                        Date date = Calendar.getInstance().getTime();
+
+                        LatLng input = new LatLng(Double.parseDouble(lat),Double.parseDouble(longM));
+                        Message message = new Message(input,2);
+                        ListaMensajes.add(message);
+                        recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
+                        recycleViewAdapater.notifyDataSetChanged();
+                        recyclerView.setAdapter(recycleViewAdapater);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
 
     public Emitter.Listener ListenMessages = new Emitter.Listener(){
 
@@ -205,6 +294,8 @@ public class PrivateChatRoom extends AppCompatActivity {
                         String uNickname = data.getString("uNickname");
                         String messageText = data.getString("message");
                         Date date = Calendar.getInstance().getTime();
+
+
                         Message message = new Message(messageText, uNickname, date);
                         ListaMensajes.add(message);
                         for(int i = 0; i<ListaMensajes.size();i++){
@@ -281,13 +372,128 @@ public class PrivateChatRoom extends AppCompatActivity {
             });
         }
     };
+
+
+    private void openCamera() throws IOException {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File imgFile = null;
+        try{
+            imgFile = createImageFile();
+
+        }catch (IOException ex){
+            Log.e("Error", ex.toString());
+        }
+        if(imgFile != null)
+        {
+            Uri imgUri = FileProvider.getUriForFile(this, "com.example.myapplication.fileprovider", imgFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+        }
+        startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
+    }
+
+    // save the image
+    // save the image
     @Override
-    protected void onDestroy(){
-        super.onDestroy();
+    protected void onActivityResult(int requestCode, int resultCode, Intent fromData) {
+        super.onActivityResult(requestCode, resultCode, fromData);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
+                    Bitmap imgBitMap = BitmapFactory.decodeFile(photoURI);
+                    mPhotoImageView.setImageBitmap(imgBitMap);
+                }
+                if (requestCode == 1) {
+                    if(resultCode == Activity.RESULT_OK){
+                        double actual_ubi_lat = fromData.getExtras().getDouble("actual_ubi_lat");
+                        Actual_ubi_lat = actual_ubi_lat;
+                        double actual_ubi_long = fromData.getExtras().getDouble("actual_ubi_long");
+                        Actual_ubi_long = actual_ubi_long;
+                        actual_ubi_check = fromData.getExtras().getBoolean("actual_ubi_check");
+                        if (actual_ubi_check == true){
+
+                            //Emitting message.
+                            mSocket.emit("mapemmit", username, Actual_ubi_lat,Actual_ubi_long, roomname, "map");
+
+                           /* LatLng actual = new LatLng(Actual_ubi_lat,Actual_ubi_long);
+                            Message message = new Message(actual, 1);
+                            ListaMensajes.add(message);
+                            recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
+                            recycleViewAdapater.notifyDataSetChanged();
+                            recyclerView.setAdapter(recycleViewAdapater);*/
+                        }
+                        double search_ubi_lat = fromData.getExtras().getDouble("search_ubi_lat");
+                        Input_ubi_lat = search_ubi_lat;
+                        double search_ubi_long = fromData.getExtras().getDouble("search_ubi_long");
+                        Input_ubi_long = search_ubi_long;
+                        input_ubi_check = fromData.getExtras().getBoolean("input_ubi_check");
+                        if (input_ubi_check == true){
+
+                            //Emitting message
+                            mSocket.emit("mapemmit", username, Input_ubi_lat,Input_ubi_long, roomname, "map");
+
+                          /*  LatLng input = new LatLng(Input_ubi_lat,Input_ubi_long);
+                            Message message = new Message(input,2);
+                            ListaMensajes.add(message);
+                            recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
+                            recycleViewAdapater.notifyDataSetChanged();
+                            recyclerView.setAdapter(recycleViewAdapater);*/
+
+                        }
+                        double marker_ubi_lat = fromData.getExtras().getDouble("marker_ubi_lat");
+                        Marker_ubi_lat = marker_ubi_lat;
+                        double marker_ubi_long = fromData.getExtras().getDouble("marker_ubi_long");
+                        Marker_ubi_long = marker_ubi_long;
+                        marker_ubi_check = fromData.getExtras().getBoolean("marker_ubi_check");
+                        if (marker_ubi_check == true){
+                            //Emitting message
+                            mSocket.emit("mapemmit", username, Marker_ubi_lat,Marker_ubi_long, roomname,"map");
+
+                            /*LatLng marker = new LatLng(Marker_ubi_lat,Marker_ubi_long);
+                            Message message = new Message(marker,3);
+                            ListaMensajes.add(message);
+                            recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
+                            recycleViewAdapater.notifyDataSetChanged();
+                            recyclerView.setAdapter(recycleViewAdapater);*/
+                        }
+                        Log.e("actual_ubi_lat: ", String.valueOf(actual_ubi_lat));
+                        Log.e("actual_ubi_long: ", String.valueOf(actual_ubi_long));
+                        Log.e("search_ubi_lat: ", String.valueOf(search_ubi_lat));
+                        Log.e("search_ubi_long: ", String.valueOf(search_ubi_long));
+                        Log.e("marker_ubi_lat: ", String.valueOf(marker_ubi_lat));
+                        Log.e("marker_ubi_long: ", String.valueOf(marker_ubi_long));
+                    }
+                    if (resultCode == Activity.RESULT_CANCELED) {
+                        // Write your code if there's no result
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
         Log.d("activity","Closing App");
         configEditor = prefs.edit();
         configEditor.putBoolean("activityStarted", false);
         configEditor.commit();
         startService(new Intent(getBaseContext(), NotificationService.class));
+    }
+    private File createImageFile() throws  IOException{
+        String name = "foto_";
+        File folder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(name, ".jpg", folder);
+
+        photoURI = image.getAbsolutePath();
+        Log.d("PHOTOURI:",photoURI);
+        return image;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSocket.disconnect();
     }
 }

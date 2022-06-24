@@ -37,7 +37,7 @@ public class PrivateRoom extends AppCompatActivity {
         Intent toChatRoom = new Intent(PrivateRoom.this, ChatRoom.class);
         toChatRoom.putExtra("username", username);
 
-/*
+
         FirebaseDynamicLinks.getInstance().getDynamicLink(getIntent())
                         .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
                             @Override
@@ -46,6 +46,13 @@ public class PrivateRoom extends AppCompatActivity {
                                 if (pendingDynamicLinkData != null) {
                                     deepLink = pendingDynamicLinkData.getLink();
                                     Log.d("DeepLink: ", String.valueOf(deepLink));
+                                    String URL = deepLink.toString();
+                                    String [] Text = URL.split("/");
+                                    String roomname = Text[2];
+                                    Intent toChatRoom = new Intent(PrivateRoom.this, ChatRoom.class);
+                                    toChatRoom.putExtra("username", username);
+                                    toChatRoom.putExtra("chatroomname", namePrivateRoom.getText().toString());
+                                    startActivity(toChatRoom);
                                 }
                             }
                         }).addOnFailureListener(this, new OnFailureListener() {
@@ -53,7 +60,7 @@ public class PrivateRoom extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         Log.d("FirebaseDynamicLink", "OnFailure",e);
                     }
-                });*/
+                });
 
         goPrivateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
