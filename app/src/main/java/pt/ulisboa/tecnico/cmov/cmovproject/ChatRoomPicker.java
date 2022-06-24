@@ -81,10 +81,10 @@ public class ChatRoomPicker extends AppCompatActivity implements View.OnClickLis
                     Toast toastUserName = Toast.makeText(context, text, duration);
                     toastUserName.show();
                 } else {
-                    //Need to implement correct authentication. Could be using NodeJS or Firebase.
                     Intent toChatRoom = new Intent(ChatRoomPicker.this, ChatRoom.class);
-                    toChatRoom.putExtra("username", username);
-                    toChatRoom.putExtra("chatroomname", chatRoomName.getText().toString());
+                    configEditor = prefs.edit();
+                    configEditor.putString("chatroomname",chatRoomName.getText().toString());
+                    configEditor.commit();
                     startActivity(toChatRoom);
                 }
                 break;

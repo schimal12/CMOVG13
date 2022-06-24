@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -52,7 +53,7 @@ import java.util.List;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
+public class ChatRoom extends AppCompatActivity  {
 
     //private Socket socket;
     private String username;
@@ -83,15 +84,10 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
     Double Marker_ubi_lat, Marker_ubi_long;           // from MapsActivity
     SupportMapFragment mapFragment;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
-
-
 
         //Notifying that the application was created.
 
@@ -126,10 +122,11 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        //Getting information from Shared Preferences.
 
-        Intent fromUsername = getIntent();
-        username = fromUsername.getExtras().getString("username");
-        roomname = fromUsername.getExtras().getString("chatroomname");
+        username = prefs.getString("username","Anonymous");
+        roomname = prefs.getString("chatroomname","Anonymous");
+
         RoomName.setText("Room: "+roomname);
 
         // --------- Camera ---------
@@ -154,18 +151,14 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
             public void onClick(View v) {
                 Intent maps_intent = new Intent(ChatRoom.this,MapsActivity.class);
                 maps_intent.putExtra("username",username);
-                startActivity(maps_intent);
+                startActivityForResult(maps_intent, 1);
             }
         });
 
         // --------- Map Fragment no visible in the beginning ---------
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.ubi);
-        mapFragment.getMapAsync(this);
         mapFragment.getView().setVisibility(View.GONE);
-
-        receiveDataFromMapsActivity();
-        //
 
         app = SocketIOApp.getInstance();
         mSocket = app.getSocket();
@@ -177,6 +170,7 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
         mSocket.on("userjoinedroom", ListenUserRoom);
         mSocket.on("userDisconnected", ListerUserDisconnected);
         mSocket.on("updatingMessages", ListenUpdateMessage);
+        mSocket.on("messageMap", ListenUpdateMap);
 
         //Modification of emit to join to a specific Room.
         mSocket.emit("join", username, roomname);
@@ -187,7 +181,8 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSocket.emit("messageemit", username, message.getText().toString(), roomname);
+
+                mSocket.emit("messageemit", username, message.getText().toString(), roomname,"text");
                 message.setText(" ");
             }
         });
@@ -244,6 +239,34 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
         }
     };
 
+    public Emitter.Listener ListenUpdateMap = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject)args[0];
+                    try {
+                        String uNickname = data.getString("uNickname");
+                        String messageText = data.getString("message");
+                        String [] values = (messageText.split("-"));
+                        String lat = values[0];
+                        String longM = values[1];
+                        Date date = Calendar.getInstance().getTime();
+
+                        LatLng input = new LatLng(Double.parseDouble(lat),Double.parseDouble(longM));
+                        Message message = new Message(input,2);
+                        ListaMensajes.add(message);
+                        recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
+                        recycleViewAdapater.notifyDataSetChanged();
+                        recyclerView.setAdapter(recycleViewAdapater);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
 
     public Emitter.Listener ListenMessages = new Emitter.Listener(){
 
@@ -257,6 +280,8 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
                         String uNickname = data.getString("uNickname");
                         String messageText = data.getString("message");
                         Date date = Calendar.getInstance().getTime();
+
+
                         Message message = new Message(messageText, uNickname, date);
                         ListaMensajes.add(message);
                         for(int i = 0; i<ListaMensajes.size();i++){
@@ -333,40 +358,7 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
             });
         }
     };
-    private void receiveDataFromMapsActivity(){
-        Intent fromData = getIntent();
-        username = fromData.getExtras().getString("username");
-        double actual_ubi_lat = fromData.getExtras().getDouble("actual_ubi_lat");
-        Actual_ubi_lat = actual_ubi_lat;
-        double actual_ubi_long = fromData.getExtras().getDouble("actual_ubi_long");
-        Actual_ubi_long = actual_ubi_long;
-        actual_ubi_check = fromData.getExtras().getBoolean("actual_ubi_check");
-        if (actual_ubi_check == true){
-            mapFragment.getView().setVisibility(View.VISIBLE);
-        }
-        double search_ubi_lat = fromData.getExtras().getDouble("search_ubi_lat");
-        Input_ubi_lat = search_ubi_lat;
-        double search_ubi_long = fromData.getExtras().getDouble("search_ubi_long");
-        Input_ubi_long = search_ubi_long;
-        input_ubi_check = fromData.getExtras().getBoolean("input_ubi_check");
-        if (input_ubi_check == true){
-            mapFragment.getView().setVisibility(View.VISIBLE);
-        }
-        double marker_ubi_lat = fromData.getExtras().getDouble("marker_ubi_lat");
-        Marker_ubi_lat = marker_ubi_lat;
-        double marker_ubi_long = fromData.getExtras().getDouble("marker_ubi_long");
-        Marker_ubi_long = marker_ubi_long;
-        marker_ubi_check = fromData.getExtras().getBoolean("marker_ubi_check");
-        if (marker_ubi_check == true){
-            mapFragment.getView().setVisibility(View.VISIBLE);
-        }
-        Log.e("actual_ubi_lat: ", String.valueOf(actual_ubi_lat));
-        Log.e("actual_ubi_long: ", String.valueOf(actual_ubi_long));
-        Log.e("search_ubi_lat: ", String.valueOf(search_ubi_lat));
-        Log.e("search_ubi_long: ", String.valueOf(search_ubi_long));
-        Log.e("marker_ubi_lat: ", String.valueOf(marker_ubi_lat));
-        Log.e("marker_ubi_long: ", String.valueOf(marker_ubi_long));
-    }
+
 
     private void openCamera() throws IOException {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -382,18 +374,92 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
             Uri imgUri = FileProvider.getUriForFile(this, "com.example.myapplication.fileprovider", imgFile);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
         }
-
         startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
     }
 
     // save the image
+    // save the image
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
-            Bitmap imgBitMap = BitmapFactory.decodeFile(photoURI);
-            mPhotoImageView.setImageBitmap(imgBitMap);
-        }
+    protected void onActivityResult(int requestCode, int resultCode, Intent fromData) {
+        super.onActivityResult(requestCode, resultCode, fromData);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
+                    Bitmap imgBitMap = BitmapFactory.decodeFile(photoURI);
+                    mPhotoImageView.setImageBitmap(imgBitMap);
+                }
+                if (requestCode == 1) {
+                    Log.d("Mapas","Aqui andamos");
+                    if(resultCode == Activity.RESULT_OK){
+                        Log.d("Where","ReceiverDataFromMapsActivity");
+                        double actual_ubi_lat = fromData.getExtras().getDouble("actual_ubi_lat");
+                        Actual_ubi_lat = actual_ubi_lat;
+                        double actual_ubi_long = fromData.getExtras().getDouble("actual_ubi_long");
+                        Actual_ubi_long = actual_ubi_long;
+                        actual_ubi_check = fromData.getExtras().getBoolean("actual_ubi_check");
+                        if (actual_ubi_check == true){
+
+                            //Emitting message.
+                            mSocket.emit("mapemmit", username, Actual_ubi_lat,Actual_ubi_long, roomname, "map");
+
+
+
+                            LatLng actual = new LatLng(Actual_ubi_lat,Actual_ubi_long);
+                            Message message = new Message(actual, 1);
+                            ListaMensajes.add(message);
+                            recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
+                            recycleViewAdapater.notifyDataSetChanged();
+                            recyclerView.setAdapter(recycleViewAdapater);
+                        }
+                        double search_ubi_lat = fromData.getExtras().getDouble("search_ubi_lat");
+                        Input_ubi_lat = search_ubi_lat;
+                        double search_ubi_long = fromData.getExtras().getDouble("search_ubi_long");
+                        Input_ubi_long = search_ubi_long;
+                        input_ubi_check = fromData.getExtras().getBoolean("input_ubi_check");
+                        if (input_ubi_check == true){
+
+                            //Emitting message
+                            mSocket.emit("mapemmit", username, Input_ubi_lat,Input_ubi_long, roomname, "map");
+
+                            LatLng input = new LatLng(Input_ubi_lat,Input_ubi_long);
+                            Message message = new Message(input,2);
+                            ListaMensajes.add(message);
+                            recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
+                            recycleViewAdapater.notifyDataSetChanged();
+                            recyclerView.setAdapter(recycleViewAdapater);
+
+                        }
+                        double marker_ubi_lat = fromData.getExtras().getDouble("marker_ubi_lat");
+                        Marker_ubi_lat = marker_ubi_lat;
+                        double marker_ubi_long = fromData.getExtras().getDouble("marker_ubi_long");
+                        Marker_ubi_long = marker_ubi_long;
+                        marker_ubi_check = fromData.getExtras().getBoolean("marker_ubi_check");
+                        if (marker_ubi_check == true){
+
+                            //Emitting message
+                            mSocket.emit("mapemmit", username, Marker_ubi_lat,Marker_ubi_long, roomname,"map");
+
+                            LatLng marker = new LatLng(Marker_ubi_lat,Marker_ubi_long);
+                            Message message = new Message(marker,3);
+                            ListaMensajes.add(message);
+                            recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
+                            recycleViewAdapater.notifyDataSetChanged();
+                            recyclerView.setAdapter(recycleViewAdapater);
+                        }
+                        Log.e("actual_ubi_lat: ", String.valueOf(actual_ubi_lat));
+                        Log.e("actual_ubi_long: ", String.valueOf(actual_ubi_long));
+                        Log.e("search_ubi_lat: ", String.valueOf(search_ubi_lat));
+                        Log.e("search_ubi_long: ", String.valueOf(search_ubi_long));
+                        Log.e("marker_ubi_lat: ", String.valueOf(marker_ubi_lat));
+                        Log.e("marker_ubi_long: ", String.valueOf(marker_ubi_long));
+                    }
+                    if (resultCode == Activity.RESULT_CANCELED) {
+                        // Write your code if there's no result
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -415,6 +481,7 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
         return image;
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -422,7 +489,7 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     // fragment of the map on the chat
-    @Override
+  /*  @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         LatLng location = new LatLng(0,0);
@@ -455,5 +522,5 @@ public class ChatRoom extends AppCompatActivity implements OnMapReadyCallback {
                 .tilt(45)
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
+    }*/
 }

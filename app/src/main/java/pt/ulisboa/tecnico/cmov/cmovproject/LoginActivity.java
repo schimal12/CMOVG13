@@ -73,10 +73,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     toastUserName.show();
                 }else{
                     Intent toChatRoom = new Intent(LoginActivity.this, ChooseTypeofRoom.class);
+
                     toChatRoom.putExtra("username", username.getText().toString());
 
                     configEditor = prefs.edit();
                     configEditor.putString("username",username.getText().toString());
+                    configEditor.commit();
                     startActivity(toChatRoom);
                 }
                 break;

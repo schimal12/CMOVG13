@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.cmovproject;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -112,7 +113,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 chat_intent.putExtra("actual_ubi_long", actual_ubi_long);
                 actual_ubi_check = true;
                 chat_intent.putExtra("actual_ubi_check", actual_ubi_check);
-                startActivity(chat_intent);
+                setResult(Activity.RESULT_OK,chat_intent);
+                finish();
             }
         });
 
@@ -128,7 +130,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 chat_intent2.putExtra("search_ubi_long", search_ubi_long);
                 input_ubi_check = true;
                 chat_intent2.putExtra("input_ubi_check", input_ubi_check);
-                startActivity(chat_intent2);
+                setResult(Activity.RESULT_OK,chat_intent2);
+                finish();
             }
         });
 
@@ -144,10 +147,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 chat_intent3.putExtra("marker_ubi_long", marker_ubi_long);
                 marker_ubi_check = true;
                 chat_intent3.putExtra("marker_ubi_check",marker_ubi_check);
-                startActivity(chat_intent3);
+                setResult(Activity.RESULT_OK,chat_intent3);
+                finish();
             }
         });
-
     }
 
     private void getLocalization() {
