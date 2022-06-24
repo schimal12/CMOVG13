@@ -213,7 +213,7 @@ public class ChatRoom extends AppCompatActivity  {
 
     public Emitter.Listener ListenConnection = new Emitter.Listener(){
 
-     @Override
+        @Override
         public void call(Object... args) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -318,7 +318,7 @@ public class ChatRoom extends AppCompatActivity  {
     };
 
     public Emitter.Listener onConnect = new Emitter.Listener() {
-        @Override   
+        @Override
         public void call(Object... args) {
             Log.d("Socket", "Socket Connected!");
         }
@@ -383,9 +383,7 @@ public class ChatRoom extends AppCompatActivity  {
                     mPhotoImageView.setImageBitmap(imgBitMap);
                 }
                 if (requestCode == 1) {
-                    Log.d("Mapas","Aqui andamos");
                     if(resultCode == Activity.RESULT_OK){
-                        Log.d("Where","ReceiverDataFromMapsActivity");
                         double actual_ubi_lat = fromData.getExtras().getDouble("actual_ubi_lat");
                         Actual_ubi_lat = actual_ubi_lat;
                         double actual_ubi_long = fromData.getExtras().getDouble("actual_ubi_long");
@@ -396,14 +394,12 @@ public class ChatRoom extends AppCompatActivity  {
                             //Emitting message.
                             mSocket.emit("mapemmit", username, Actual_ubi_lat,Actual_ubi_long, roomname, "map");
 
-
-
-                            LatLng actual = new LatLng(Actual_ubi_lat,Actual_ubi_long);
+                           /* LatLng actual = new LatLng(Actual_ubi_lat,Actual_ubi_long);
                             Message message = new Message(actual, 1);
                             ListaMensajes.add(message);
                             recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
                             recycleViewAdapater.notifyDataSetChanged();
-                            recyclerView.setAdapter(recycleViewAdapater);
+                            recyclerView.setAdapter(recycleViewAdapater);*/
                         }
                         double search_ubi_lat = fromData.getExtras().getDouble("search_ubi_lat");
                         Input_ubi_lat = search_ubi_lat;
@@ -415,12 +411,12 @@ public class ChatRoom extends AppCompatActivity  {
                             //Emitting message
                             mSocket.emit("mapemmit", username, Input_ubi_lat,Input_ubi_long, roomname, "map");
 
-                            LatLng input = new LatLng(Input_ubi_lat,Input_ubi_long);
+                          /*  LatLng input = new LatLng(Input_ubi_lat,Input_ubi_long);
                             Message message = new Message(input,2);
                             ListaMensajes.add(message);
                             recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
                             recycleViewAdapater.notifyDataSetChanged();
-                            recyclerView.setAdapter(recycleViewAdapater);
+                            recyclerView.setAdapter(recycleViewAdapater);*/
 
                         }
                         double marker_ubi_lat = fromData.getExtras().getDouble("marker_ubi_lat");
@@ -429,16 +425,15 @@ public class ChatRoom extends AppCompatActivity  {
                         Marker_ubi_long = marker_ubi_long;
                         marker_ubi_check = fromData.getExtras().getBoolean("marker_ubi_check");
                         if (marker_ubi_check == true){
-
                             //Emitting message
                             mSocket.emit("mapemmit", username, Marker_ubi_lat,Marker_ubi_long, roomname,"map");
 
-                            LatLng marker = new LatLng(Marker_ubi_lat,Marker_ubi_long);
+                            /*LatLng marker = new LatLng(Marker_ubi_lat,Marker_ubi_long);
                             Message message = new Message(marker,3);
                             ListaMensajes.add(message);
                             recycleViewAdapater = new RecycleViewAdapater(ListaMensajes); //In the onCreate
                             recycleViewAdapater.notifyDataSetChanged();
-                            recyclerView.setAdapter(recycleViewAdapater);
+                            recyclerView.setAdapter(recycleViewAdapater);*/
                         }
                         Log.e("actual_ubi_lat: ", String.valueOf(actual_ubi_lat));
                         Log.e("actual_ubi_long: ", String.valueOf(actual_ubi_long));
@@ -480,40 +475,4 @@ public class ChatRoom extends AppCompatActivity  {
         super.onDestroy();
         mSocket.disconnect();
     }
-
-    // fragment of the map on the chat
-  /*  @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
-        LatLng location = new LatLng(0,0);
-        if (actual_ubi_check == true){
-            LatLng actual = new LatLng(Actual_ubi_lat,Actual_ubi_long);
-            location = actual;
-            mMap.addMarker(new MarkerOptions()
-                    .position(actual)
-                    .title("Current location"));
-        }
-        else if (input_ubi_check == true){
-            LatLng input = new LatLng(Input_ubi_lat,Input_ubi_long);
-            location = input;
-            mMap.addMarker(new MarkerOptions()
-                    .position(input)
-                    .title("Search location"));
-        }
-        else if (marker_ubi_check == true){
-            LatLng marker = new LatLng(Marker_ubi_lat,Marker_ubi_long);
-            location = marker;
-            mMap.addMarker(new MarkerOptions()
-                    .position(marker)
-                    .title("Marker location"));
-        }
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(location)
-                .zoom(15)
-                .bearing(90)
-                .tilt(45)
-                .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }*/
 }
