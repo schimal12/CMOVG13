@@ -26,7 +26,7 @@
             android:layout_alignParentRight="true"
             android:layout_gravity="bottom"
             android:gravity="right"
-            android:text="Share"
+            android:text="@string/share"
             android:textSize="10dp" />
 
     </LinearLayout>
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
-                android:hint="Write" />
+                android:hint="@string/write" />
 
             <Button
                 android:id="@+id/sendMessage"

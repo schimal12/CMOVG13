@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_weight="1"
-                android:text="search location"
+                android:text="@string/search_location"
                 tools:ignore="Suspicious0dp"></EditText>
 
             <ImageView

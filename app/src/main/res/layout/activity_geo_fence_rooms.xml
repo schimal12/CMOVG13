@@ -17,7 +17,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20sp"
             android:includeFontPadding="false"
-            android:text="Chat Room"
+            android:text="@string/chat_room"
             android:textSize="32sp"/>
 
         <TextView
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:includeFontPadding="false"
-            android:text="Create a GeoFence Room"
+            android:text="@string/Create_a_GeoFence_Room"
             android:textSize="14sp"/>
 
         <LinearLayout
@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="Chat room name"
+                android:text="@string/chat_room_name"
                 android:textSize="15sp" />
 
             <EditText
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:hint="Enter chat room name"
+                android:hint="@string/Enter_a_chat_room_name"
                 android:inputType="text"
                 android:singleLine="true" />
 
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="Chat room radio"
+                android:text="@string/Chat_room_radius"
                 android:textSize="15sp" />
 
             <EditText
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:hint="Enter the radio"
+                android:hint="@string/Enter_the_radius"
                 android:inputType="number"
                 android:singleLine="true" />
 
@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="Chat room location"
+                android:text="@string/Chat_room_location"
                 android:textSize="15sp" />
 
             <LinearLayout
@@ -94,19 +94,19 @@
                         android:id="@+id/actual_ubi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Actual location" />
+                        android:text="@string/Actual_location" />
 
                     <Button
                         android:id="@+id/input_ubi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Input location" />
+                        android:text="@string/Input_location" />
 
                     <Button
                         android:id="@+id/marker_ubi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Marker location" />
+                        android:text="@string/pinned_location" />
                 </LinearLayout>
 
             </LinearLayout>

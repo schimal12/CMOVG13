@@ -39,5 +39,14 @@
     <string name="enter_your_email">Gib deine Email Ein</string>
     <string name="nickname">Nickname:</string>
     <string name="message">Nachricht</string>
+    <string name="Create_a_GeoFence_Room">Erstelle einen Geofence Chat</string>
+    <string name="Chat_room_radius">Chat Radius</string>
+    <string name="Enter_the_radius">Gib den Radius ein</string>
+    <string name="Chat_room_location">Chat Standort</string>
+    <string name="Actual_location">Aktuellen Standort</string>
+    <string name="Input_location">Eingegebener Standort</string>
+    <string name="pinned_location">Gepinnter Standort</string>
+    <string name="search_location">Nach Ort suchen</string>
+    <string name="already_have_an_account">Hast du bereits einen Account?</string>
 
 </resources>

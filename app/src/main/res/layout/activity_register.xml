@@ -29,8 +29,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="20dp">
+            android:layout_margin="20dp"
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,12 +47,14 @@
                 android:hint="@string/enter_your_username"
                 android:inputType="text"
                 android:singleLine="true"></EditText>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/email"
                 android:layout_marginTop="15dp"
+                android:text="@string/email"
                 android:textSize="15sp"></TextView>
+
             <EditText
                 android:id="@+id/registerEmail"
                 android:layout_width="match_parent"
@@ -86,8 +89,8 @@
             android:layout_marginTop="60dp"
             android:gravity="center"
             android:text="@string/sign_up"
-            android:textSize="20sp">
-        </Button>
+            android:textSize="20sp"></Button>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -103,13 +106,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Already have an account?"
+                android:text="@string/already_have_an_account"
                 android:textSize="16sp"></TextView>
 
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="Already have an account?"
-                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/signinButton"
@@ -118,7 +117,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:text="Sign In"
+                android:text="@string/sign_in"
                 android:textAlignment="center"
                 android:textSize="20sp" />
         </LinearLayout>
