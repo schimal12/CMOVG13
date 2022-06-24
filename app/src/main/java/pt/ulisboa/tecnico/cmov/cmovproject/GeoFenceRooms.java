@@ -108,7 +108,9 @@ public class GeoFenceRooms extends AppCompatActivity implements OnMapReadyCallba
                     seeTheGeoFence.putExtra("send_latitude",send_latitude);
                     seeTheGeoFence.putExtra("send_longitude",send_longitude);
                     send_radio = radio.getText().toString();
-                    seeTheGeoFence.putExtra("send_radio",send_radio);
+                    float radius = Float.parseFloat(send_radio);
+                    Log.e("SEND_RADIO", String.valueOf(radius));
+                    seeTheGeoFence.putExtra("send_radio",radius);
                     startActivity(seeTheGeoFence);
                 }
             }

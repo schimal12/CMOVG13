@@ -1,26 +1,15 @@
 package pt.ulisboa.tecnico.cmov.cmovproject;
 
-import pt.ulisboa.tecnico.cmov.cmovproject.model.Message;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -31,13 +20,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,13 +36,14 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import pt.ulisboa.tecnico.cmov.cmovproject.model.Message;
 
 public class ChatRoom extends AppCompatActivity  {
 
@@ -387,6 +379,7 @@ public class ChatRoom extends AppCompatActivity  {
             public void run() {
                 if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
                     Bitmap imgBitMap = BitmapFactory.decodeFile(photoURI);
+                    Log.e("hhhhh","imgBitMap");
                     mPhotoImageView.setImageBitmap(imgBitMap);
                 }
                 if (requestCode == 1) {
