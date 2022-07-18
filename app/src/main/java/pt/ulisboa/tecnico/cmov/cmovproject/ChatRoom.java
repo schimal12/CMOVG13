@@ -132,7 +132,7 @@ public class ChatRoom extends AppCompatActivity  {
         });
 
         //This part needs to be integrated with the messages.
-
+//
         // to show the photo on the chat
         mPhotoImageView = findViewById(R.id.imageView);
 
