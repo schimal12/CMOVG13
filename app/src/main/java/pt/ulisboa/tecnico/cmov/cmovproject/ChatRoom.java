@@ -473,6 +473,6 @@ public class ChatRoom extends AppCompatActivity  {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mSocket.disconnect();
+        //mSocket.disconnect();
     }
 }
